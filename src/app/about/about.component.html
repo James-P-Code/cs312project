@@ -1,0 +1,12 @@
+<div class="bio-container">
+    @for (aboutItem of aboutItems; track $index) {
+    <div class="bio-line">
+        <div class="bio-text">{{aboutItem.getBio()}}</div>
+        <div class="bio-img-wrapper">
+            <img class="bio-img" src="{{aboutItem.getPicture()}}" alt="{{aboutItem.getDisplayName()}}">
+            <div class="bio-name">{{aboutItem.getDisplayName()}}</div>
+        </div>
+    </div>
+    <hr>
+    }
+</div>

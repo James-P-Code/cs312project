@@ -1,11 +1,18 @@
-<nav>
-    <ul>
-        @for (navBarItem of navBarItems; track $index) {
+<header>
+    <img src="images/logo-no-text.png" class="website-icon" />
+    <h1>Glimmerbyte </h1>
+    <nav>
+
+        <ul>
+            @for (navBarItem of navBarItems; track $index) {
             <li [class.active]="navBarItem.isActiveURL(this.router.url)">
                 <a [href]="navBarItem.getURL()">
-                  {{ navBarItem.getDisplayName() }}
+                    {{ navBarItem.getDisplayName() }}
                 </a>
             </li>
-        }
-    </ul>
-</nav>
+            }
+        </ul>
+
+
+    </nav>
+</header>

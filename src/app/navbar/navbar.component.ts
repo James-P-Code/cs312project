@@ -12,6 +12,7 @@ import { NavbarItem } from './navbar_item/navbar_item';
     constructor(public router: Router) {}
 
     navBarItems: NavbarItem[] = [
-      new NavbarItem('Color Coordinate Generator', 'color')
+      new NavbarItem('Color Coordinate Generator', 'color'),
+      new NavbarItem('About', 'about'),
     ];
   }
