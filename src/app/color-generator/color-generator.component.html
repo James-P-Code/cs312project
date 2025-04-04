@@ -1,4 +1,20 @@
-
-    <div class="color-coordinate-canvas-area">
-        <canvas #colorCoordinateCanvas width="17750" height="3000"></canvas>
-    </div>
+<table id="coordinate-table">
+    <tr class="sticky-header">
+        @for (columns of columnIndices; track $index) {
+            <th>
+                {{ headerLetters[$index] }}
+            </th>
+        }
+    </tr>
+    @for (rows of rowIndices; track $index; let rowNumber = $index) {
+        <tr>
+            @for (columns of columnIndices; track $index; let columnNumber = $index) {
+                <td (click)="cell.classList.toggle('hidden')">
+                    <span #cell class="hidden">
+                        {{ headerLetters[columnNumber] + rowNumber }}
+                    </span>
+                </td>
+            }
+        </tr>
+    }
+</table>
