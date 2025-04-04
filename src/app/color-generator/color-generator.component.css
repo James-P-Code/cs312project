@@ -1,0 +1,35 @@
+table {
+  border-collapse: separate;
+}
+
+td {
+    border: 1px solid;
+  }
+
+  .sticky-header {
+    position: sticky;
+    background-color: black;
+    top: 0;
+    color: white;
+    padding: 5px;
+    z-index: 10;
+    overflow: scroll;
+  }
+
+  .sticky-column {
+    position: sticky;
+    left: 0;
+    background-color: black;
+    color: white;
+    z-index: 10;
+  }
+
+  .color-coordinate-canvas-area {
+    width: 80%;
+    height: 600px;
+    overflow: auto;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }

@@ -1,0 +1,25 @@
+<form [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
+    <p>
+        Rows:
+        <input type="text" formControlName="rows" name="rows" />
+        @if (rows?.invalid) {
+            @if (rows?.hasError('max')) {
+                MAX ERROR!
+            }
+        }
+    </p>
+    <p>
+        Columns:
+        <input type="text" formControlName="columns" name="columns" />
+        @if (rows?.invalid) {
+            @if (columns?.hasError('max')) {
+                MAX ERROR!
+            }
+        }
+    </p>
+    <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>
+</form>
+
+@if (formSubmitted) {
+    <app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!"></app-color-generator>
+}

@@ -1,0 +1,11 @@
+<nav>
+    <ul>
+        @for (navBarItem of navBarItems; track $index) {
+            <li [class.active]="navBarItem.isActiveURL(this.router.url)">
+                <a [href]="navBarItem.getURL()">
+                  {{ navBarItem.getDisplayName() }}
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

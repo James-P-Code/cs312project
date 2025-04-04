@@ -1,0 +1,26 @@
+nav ol {
+    list-style-type: none;
+}
+
+nav li {
+    padding: 12px;
+    color: #8C8C88;
+    text-decoration: none;
+    font-size: 20px;
+    display: inline-block;
+    background: blueviolet;
+    border: none;
+    cursor: pointer;
+  }
+  
+  nav li:hover {
+    background-color: #29524A;
+    color:#94A187;
+  }
+  
+  nav li.active {
+    background-color: #94a187;
+    text-decoration: none;
+    font-weight: bold;
+    color: #0e0906;
+  }
