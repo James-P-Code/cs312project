@@ -1,5 +1,10 @@
 table {
   border-collapse: separate;
+  table-layout: fixed;
+}
+
+.coordinate-table {
+  display: none;
 }
 
 td {
@@ -26,10 +31,14 @@ td {
 
   .color-coordinate-canvas-area {
     width: 80%;
-    height: 600px;
+    max-height: 400px;
     overflow: auto;
   }
 
   .hidden {
     visibility: hidden;
+  }
+
+  .not-displayed {
+    display: none;
   }
