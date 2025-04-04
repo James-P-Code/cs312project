@@ -1,26 +1,105 @@
-nav ol {
-    list-style-type: none;
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Monoton&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Monoton&display=swap");
+
+header {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--primary, #2b3a56);
+  color: white;
+  text-shadow: 1px 1px 2px #000;
+  font-family: "Pacifico", cursive;
+  letter-spacing: 3px;
+  -webkit-text-stroke: 0.05px black;
+  position: relative;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  margin-bottom: 10px;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-family: "Monoton";
+  margin: 0;
+}
+
+.website-icon {
+  align-self: center;
+  padding: 10px;
+  width: 75px;
+  height: auto;
+}
+
+nav {
+  margin-left: 10px;
+  background: transparent;
+  overflow: hidden;
+  align-self: flex-end;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: left;
+}
+
+nav ul li {
+  margin: 0;
+}
+nav ul li:first-child a {
+  border-top-left-radius: 8px;
+}
+nav ul li:last-child a {
+  border-top-right-radius: 8px;
+}
+
+nav ul li a {
+  display: block;
+  color: var(--text, white);
+  background-color: var(--accent-one, rgba(255, 255, 255, 0.546));
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-family: "Baloo 2", sans-serif;
+  letter-spacing: 3px;
+  -webkit-text-stroke: 0.1px black;
+  position: relative;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+}
+
+nav ul li a:hover {
+  background-color: var(--highlight, rgba(255, 255, 255, 0.546));
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* nav ol {
+  list-style-type: none;
 }
 
 nav li {
-    padding: 12px;
-    color: #8C8C88;
-    text-decoration: none;
-    font-size: 20px;
-    display: inline-block;
-    background: blueviolet;
-    border: none;
-    cursor: pointer;
-  }
-  
-  nav li:hover {
-    background-color: #29524A;
-    color:#94A187;
-  }
-  
-  nav li.active {
-    background-color: #94a187;
-    text-decoration: none;
-    font-weight: bold;
-    color: #0e0906;
-  }
+  padding: 12px;
+  color: #8c8c88;
+  text-decoration: none;
+  font-size: 20px;
+  display: inline-block;
+  background: blueviolet;
+  border: none;
+  cursor: pointer;
+}
+
+nav li:hover {
+  background-color: #29524a;
+  color: #94a187;
+}
+
+nav li.active {
+  background-color: #94a187;
+  text-decoration: none;
+  font-weight: bold;
+  color: #0e0906;
+} */
