@@ -4,8 +4,6 @@
   margin: 2rem auto;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
-
 }
 
 .bio-line {
@@ -17,7 +15,7 @@
   border-radius: 10px; */
 }
 
-.bio-line.reverse {
+.bio-line.reversed {
   flex-direction: row-reverse;
 }
 
@@ -27,7 +25,7 @@
   color: var(--text);
   line-height: 1.6;
   padding: 1rem;
-  background: var(--background); 
+  background: var(--background);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   border: var(--accent-two) 2px solid;
@@ -50,21 +48,21 @@
 }
 
 .bio-name {
-    margin-top: 0.5rem;
-    padding: 2px;
-    font-weight: bold;
-    font-size: 2rem;
-    font-family: "Baloo 2", sans-serif;
-    color: var(--text);
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-top: 0.5rem;
+  padding: 2px;
+  font-weight: bold;
+  font-size: 2rem;
+  font-family: "Baloo 2", sans-serif;
+  color: var(--text);
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 hr {
-    border: none;
-    border-top: 3px solid var(--accent-one);
-    margin: 3rem 0;
-    width: 80%;
-    align-self: center;
-    opacity: 0.8;
+  border: none;
+  border-top: 3px solid var(--accent-one);
+  margin: 3rem 0;
+  width: 80%;
+  align-self: center;
+  opacity: 0.8;
 }

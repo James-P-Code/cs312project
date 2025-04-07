@@ -1,44 +1,58 @@
 table {
-  border-collapse: separate;
+  border-collapse: collapse;
+
   table-layout: fixed;
 }
+
 
 .coordinate-table {
   display: none;
 }
 
 td {
-    border: 1px solid;
-  }
+  border: 1px solid;
+}
 
-  .sticky-header {
-    position: sticky;
-    background-color: black;
-    top: 0;
-    color: white;
-    padding: 5px;
-    z-index: 10;
-    overflow: scroll;
-  }
+th {
+  border: 1px solid;
+  background-color: black;
+  color: white;
+}
 
-  .sticky-column {
-    position: sticky;
-    left: 0;
-    background-color: black;
-    color: white;
-    z-index: 10;
-  }
+.sticky-header {
+  position: sticky;
+  background-color: black;
+  top: 0;
+  color: white;
+  padding: 5px;
+  z-index: 10;
+  overflow: scroll;
+}
 
-  .color-coordinate-canvas-area {
-    width: 80%;
-    max-height: 400px;
-    overflow: auto;
-  }
+.sticky-column {
+  position: sticky;
+  left: 0;
+  background-color: black;
+  color: white;
+  z-index: 10;
+}
 
-  .hidden {
-    visibility: hidden;
-  }
+.color-coordinate-canvas-area {
+  width: 80%;
+  max-height: 400px;
+  overflow: auto;
+}
 
-  .not-displayed {
-    display: none;
-  }
+.hidden {
+  visibility: hidden;
+}
+
+.not-displayed {
+  display: none;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+}
+

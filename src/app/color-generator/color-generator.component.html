@@ -1,20 +1,76 @@
-<table id="coordinate-table">
-    <tr class="sticky-header">
-        @for (columns of columnIndices; track $index) {
+<style>
+    @media print {
+        .scale-100 {
+            zoom: 1.5;
+            transform-origin: top left;
+        }
+
+        .scale-75 {
+            zoom: 0.75;
+            transform-origin: top left;
+        }
+
+        .scale-50 {
+            zoom: 0.5;
+            transform-origin: top left;
+        }
+
+        .scale-30 {
+            zoom: 0.3;
+            transform-origin: top left;
+        }
+
+        table {
+            font-size: 6px;
+        }
+
+
+
+        td,
+        th {
+            padding: 1px;
+            max-width: 20px;
+            word-wrap: break-word;
+        }
+
+        .table-container {
+            overflow: visible !important;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+    }
+</style>
+<div class="table-container">
+    <table class="{{printScaleClass}}" id="coordinate-table">
+        <tr class="sticky-header">
+            <th>
+
+            </th>
+            @for (columns of columnIndices; track $index) {
             <th>
                 {{ headerLetters[$index] }}
             </th>
-        }
-    </tr>
-    @for (rows of rowIndices; track $index; let rowNumber = $index) {
-        <tr>
-            @for (columns of columnIndices; track $index; let columnNumber = $index) {
-                <td (click)="cell.classList.toggle('hidden')">
-                    <span #cell class="hidden">
-                        {{ headerLetters[columnNumber] + rowNumber }}
-                    </span>
-                </td>
             }
         </tr>
-    }
-</table>
+        @for (rows of rowIndices; track $index; let rowNumber = $index) {
+        <tr>
+            <th>
+                {{rowNumber +1}}
+            </th>
+            @for (columns of columnIndices; track $index; let columnNumber = $index) {
+
+            <td (click)="cell.classList.toggle('hidden')">
+                <span #cell class="hidden">
+                    {{ headerLetters[columnNumber] + (rowNumber +1) }}
+                </span>
+            </td>
+            }
+        </tr>
+        }
+    </table>
+
+</div>
+<button class="no-print" (click)="printPage()">Print</button>

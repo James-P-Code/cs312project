@@ -1,25 +1,25 @@
-<form [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
+<form class="no-print" [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
     <p>
-        Rows:
+        Rows (1-1000):
         <input type="text" formControlName="rows" name="rows" />
         @if (rows?.invalid) {
-            @if (rows?.hasError('max')) {
-                MAX ERROR!
-            }
+        @if (rows?.hasError('max') || rows?.hasError('min')) {
+        Please enter a value from 1-1000.
+        }
         }
     </p>
     <p>
-        Columns:
+        Columns (1-702):
         <input type="text" formControlName="columns" name="columns" />
-        @if (rows?.invalid) {
-            @if (columns?.hasError('max')) {
-                MAX ERROR!
-            }
+        @if (columns?.invalid) {
+        @if (columns?.hasError('max')|| columns?.hasError('min')) {`
+        Please enter a value from 1-702.
+        }
         }
     </p>
     <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>
 </form>
 
 @if (formSubmitted) {
-    <app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!"></app-color-generator>
+<app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!"></app-color-generator>
 }
