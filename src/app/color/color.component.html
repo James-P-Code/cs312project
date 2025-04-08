@@ -1,16 +1,19 @@
-<form [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
+<form class="no-print" [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
     <p>
-        Rows:
+        Rows (1-1000):
         <input type="text" formControlName="rows" name="rows" />
+
         @if (rows?.invalid && rows?.touched) {
             @if (rows?.hasError('required')) { Required! }
             @if (rows?.hasError('min')) { Minimum is 1! }
             @if (rows?.hasError('max')) { Maximum is 1000! }
+
         }
     </p>
     <p>
-        Columns:
+        Columns (1-702):
         <input type="text" formControlName="columns" name="columns" />
+
         @if (columns?.invalid && columns?.touched) {
             @if (columns?.hasError('required')) { Required! }
             @if (columns?.hasError('min')) { Minimum is 1! }
@@ -24,6 +27,7 @@
             @if (colors?.hasError('required')) { Required! }
             @if (colors?.hasError('min')) { Minimum is 1! }
             @if (colors?.hasError('max')) { Maximum is 10! }
+
         }
     </p>
     <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>

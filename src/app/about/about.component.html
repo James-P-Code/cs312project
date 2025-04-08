@@ -1,6 +1,6 @@
 <div class="bio-container">
     @for (aboutItem of aboutItems; track $index) {
-    <div class="bio-line">
+    <div class="bio-line{{(aboutItem.isReversed() ? ' reversed' : '')}}">
         <div class="bio-text">{{aboutItem.getBio()}}</div>
         <div class="bio-img-wrapper">
             <img class="bio-img" src="{{aboutItem.getPicture()}}" alt="{{aboutItem.getDisplayName()}}">

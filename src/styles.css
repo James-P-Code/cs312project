@@ -16,4 +16,8 @@ body {
   color: var(--text);
 }
 
-
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

@@ -17,12 +17,19 @@ export class AboutComponent {
     new AboutItem(
       'James Pochas',
       'My name is James Pochas and I live in Broomfield, Colorado. I am currently an undergraduate student at Colorado State University pursuing a degree in Computer Science. I love to code and aspire to have a career as a Software Engineer. I am most familiar with Java and C++, and I also have some experience with Python. In my free time I love to explore the outdoors and I hike often.',
-      'images/james.png'
+      'images/james.png',
+      true // This reverses the order of the image and bio in the display for this item
     ),
     new AboutItem(
       'Grace Terrell',
       'My name is Grace Terrell and I am studying Computer Science at Colorado State University. I hope to have a career as a Software Engineer in my future. The programming languages that I am most familiar with are Java, Python, C++, and C. In my free time, I enjoy reading and playing piano.',
       'images/grace.png'
-    )
+    ),
+    new AboutItem(
+      'Declan McLaughlin',
+      'My name is Declan McLaughlin and I am in my final semester of a Computer Science degree. I am working an internship as a Systems Engineer and hope to convert that into a full time position. My favorite programming languages are Java and Python and I started learning PostgreSQL this year. In my free time I like to mountain bike and rock climb with my friends.',
+      'images/declan.jpg',
+      true // This reverses the order of the image and bio in the display for this item
+    ),
   ];
 }
