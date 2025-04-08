@@ -91,7 +91,18 @@ th {
   display: none;
 }
 
+.table-one {
+  margin-bottom: 2rem;
+  margin-left: 1rem;
+}
+
 .table-container {
+  margin-bottom: 2rem;
+  margin-left: 1rem;
   max-width: 100%;
   overflow-x: auto;
+}
+
+.print-button-container {
+  margin: 0 0 3rem 1rem;
 }

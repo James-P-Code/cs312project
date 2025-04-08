@@ -31,7 +31,10 @@
 
         }
     </p>
-    <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>
+
+    <div class="submit-button-container">
+        <button type="submit">Submit</button>
+    </div>
 </form>
 
 @if (formSubmitted) {
