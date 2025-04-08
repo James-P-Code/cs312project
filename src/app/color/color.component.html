@@ -2,24 +2,34 @@
     <p>
         Rows:
         <input type="text" formControlName="rows" name="rows" />
-        @if (rows?.invalid) {
-            @if (rows?.hasError('max')) {
-                MAX ERROR!
-            }
+        @if (rows?.invalid && rows?.touched) {
+            @if (rows?.hasError('required')) { Required! }
+            @if (rows?.hasError('min')) { Minimum is 1! }
+            @if (rows?.hasError('max')) { Maximum is 1000! }
         }
     </p>
     <p>
         Columns:
         <input type="text" formControlName="columns" name="columns" />
-        @if (rows?.invalid) {
-            @if (columns?.hasError('max')) {
-                MAX ERROR!
-            }
+        @if (columns?.invalid && columns?.touched) {
+            @if (columns?.hasError('required')) { Required! }
+            @if (columns?.hasError('min')) { Minimum is 1! }
+            @if (columns?.hasError('max')) { Maximum is 702! }
+        }
+    </p>
+    <p>
+        Colors:
+        <input type="text" formControlName="colors" name="colors" />
+        @if (colors?.invalid && colors?.touched) {
+            @if (colors?.hasError('required')) { Required! }
+            @if (colors?.hasError('min')) { Minimum is 1! }
+            @if (colors?.hasError('max')) { Maximum is 10! }
         }
     </p>
     <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>
 </form>
 
 @if (formSubmitted) {
-    <app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!"></app-color-generator>
+    <app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!" [colors]="numberOfColors!">
+    </app-color-generator>
 }
