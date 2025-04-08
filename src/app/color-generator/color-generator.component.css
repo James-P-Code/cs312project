@@ -1,9 +1,49 @@
+@media print {
+  .scale-100 {
+    zoom: 1.5;
+    transform-origin: top left;
+  }
+
+  .scale-75 {
+    zoom: 0.75;
+    transform-origin: top left;
+  }
+
+  .scale-50 {
+    zoom: 0.5;
+    transform-origin: top left;
+  }
+
+  .scale-30 {
+    zoom: 0.3;
+    transform-origin: top left;
+  }
+
+  table {
+    font-size: 6px;
+  }
+
+  td,
+  th {
+    padding: 1px;
+    max-width: 20px;
+    word-wrap: break-word;
+  }
+
+  .table-container {
+    overflow: visible !important;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 10mm;
+  }
+}
 table {
   border-collapse: collapse;
 
   table-layout: fixed;
 }
-
 
 .coordinate-table {
   display: none;
@@ -55,4 +95,3 @@ th {
   max-width: 100%;
   overflow-x: auto;
 }
-

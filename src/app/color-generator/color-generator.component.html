@@ -1,54 +1,55 @@
 @if (colors > 0) {
-    <table id="tableone">
-        @for (color of colorSelections; track $index) {
-            <tr>
-                <td style="width: 20%;">
-                    <input
-                        type="radio"
-                        name="selectedColor"
-                        [value]="$index"
-                        [checked]="selectedRowIndex === $index"
-                    />
-                    <select [value]="colorSelections[$index]">
-            @for (option of colorOptions; track $index) {
-              <option [value]="option">{{ option }}</option>
-            }
-          </select>
-        </td>
-        <td style="width: 80%;">
-          <!-- BLANK -->
-        </td>
-      </tr>
+<table id="tableone" class="no-print">
+  @for (color of colorSelections; track $index) {
+  <tr>
+    <td style="width: 20%">
+      <input
+        type="radio"
+        name="selectedColor"
+        [value]="$index"
+        [checked]="selectedRowIndex === $index"
+      />
+      <select [value]="colorSelections[$index]">
+        @for (option of colorOptions; track $index) {
+        <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </td>
+    <td style="width: 80%">
+      <!-- BLANK -->
+    </td>
+  </tr>
+  }
+</table>
+}
+
+<br />
+<div class="table-container">
+  <table id="coordinate-table" class="{{ printScaleClass }}">
+    <tr class="sticky-header">
+      <th></th>
+      @for (columns of columnIndices; track $index) {
+
+      <th>
+        {{ headerLetters[$index] }}
+      </th>
+      }
+    </tr>
+    @for (rows of rowIndices; track $index; let rowNumber = $index) {
+    <tr>
+      <th>
+        {{ rowNumber + 1 }}
+      </th>
+      @for (columns of columnIndices; track $index; let columnNumber = $index) {
+
+      <td (click)="cell.classList.toggle('hidden')">
+        <span #cell class="hidden">
+          {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+        </span>
+      </td>
+      }
+    </tr>
     }
   </table>
-}
-  
-  <br />
-<div class="table-container">
-<table id="coordinate-table" class="{{printScaleClass}}">
-    <tr class="sticky-header">
-        @for (columns of columnIndices; track $index) {
-            <th>
-                {{ headerLetters[$index] }}
-            </th>
-            }
-        </tr>
-        @for (rows of rowIndices; track $index; let rowNumber = $index) {
-        <tr>
-            <th>
-                {{rowNumber +1}}
-            </th>
-            @for (columns of columnIndices; track $index; let columnNumber = $index) {
-
-            <td (click)="cell.classList.toggle('hidden')">
-                <span #cell class="hidden">
-                    {{ headerLetters[columnNumber] + (rowNumber +1) }}
-                </span>
-            </td>
-            }
-        </tr>
-        }
-    </table>
-
 </div>
 <button class="no-print" (click)="printPage()">Print</button>
