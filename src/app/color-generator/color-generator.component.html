@@ -1,55 +1,33 @@
-<style>
-    @media print {
-        .scale-100 {
-            zoom: 1.5;
-            transform-origin: top left;
-        }
-
-        .scale-75 {
-            zoom: 0.75;
-            transform-origin: top left;
-        }
-
-        .scale-50 {
-            zoom: 0.5;
-            transform-origin: top left;
-        }
-
-        .scale-30 {
-            zoom: 0.3;
-            transform-origin: top left;
-        }
-
-        table {
-            font-size: 6px;
-        }
-
-
-
-        td,
-        th {
-            padding: 1px;
-            max-width: 20px;
-            word-wrap: break-word;
-        }
-
-        .table-container {
-            overflow: visible !important;
-        }
-
-        @page {
-            size: A4 landscape;
-            margin: 10mm;
-        }
+@if (colors > 0) {
+    <table id="tableone">
+        @for (color of colorSelections; track $index) {
+            <tr>
+                <td style="width: 20%;">
+                    <input
+                        type="radio"
+                        name="selectedColor"
+                        [value]="$index"
+                        [checked]="selectedRowIndex === $index"
+                    />
+                    <select [value]="colorSelections[$index]">
+            @for (option of colorOptions; track $index) {
+              <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </td>
+        <td style="width: 80%;">
+          <!-- BLANK -->
+        </td>
+      </tr>
     }
-</style>
+  </table>
+}
+  
+  <br />
 <div class="table-container">
-    <table class="{{printScaleClass}}" id="coordinate-table">
-        <tr class="sticky-header">
-            <th>
-
-            </th>
-            @for (columns of columnIndices; track $index) {
+<table id="coordinate-table" class="{{printScaleClass}}">
+    <tr class="sticky-header">
+        @for (columns of columnIndices; track $index) {
             <th>
                 {{ headerLetters[$index] }}
             </th>

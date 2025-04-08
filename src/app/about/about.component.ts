@@ -31,5 +31,10 @@ export class AboutComponent {
       'images/declan.jpg',
       true // This reverses the order of the image and bio in the display for this item
     ),
+    new AboutItem(
+      'Grace Terrell',
+      'My name is Grace Terrell and I am studying Computer Science at Colorado State University. I hope to have a career as a Software Engineer in my future. The programming languages that I am most familiar with are Java, Python, C++, and C. In my free time, I enjoy reading and playing piano.',
+      'images/grace.png'
+    )
   ];
 }
