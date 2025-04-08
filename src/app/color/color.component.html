@@ -21,8 +21,9 @@
         }
     </p>
     <p>
-        Colors:
+        Colors (1-10):
         <input type="text" formControlName="colors" name="colors" />
+        
         @if (colors?.invalid && colors?.touched) {
             @if (colors?.hasError('required')) { Required! }
             @if (colors?.hasError('min')) { Minimum is 1! }
@@ -30,7 +31,10 @@
 
         }
     </p>
-    <button type="submit" [disabled]="!rowsColumnsColorsForm.valid">Submit</button>
+
+    <div class="submit-button-container">
+        <button type="submit">Submit</button>
+    </div>
 </form>
 
 @if (formSubmitted) {
