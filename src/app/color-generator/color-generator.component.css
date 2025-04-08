@@ -91,9 +91,18 @@ th {
   display: none;
 }
 
+.table-one-wrapper {
+  padding: 0 2rem 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .table-one {
   margin-bottom: 2rem;
-  margin-left: 1rem;
+  width: 100%;
+  max-width: 800px;
+  min-width: 400px;
+  table-layout: fixed;
 }
 
 .table-container {
