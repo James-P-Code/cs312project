@@ -14,18 +14,23 @@
         />
         <div class="dropdown-wrapper">
           <label class="dropdown-label"></label>
-          <select
-            class="color-dropdown"
-            [ngStyle]="{ 'background-color': colorSelections[$index] }"
-            [(ngModel)]="colorSelections[$index]"
-          >
-            @for (option of colorOptions; track option.label) {
-              <option [value]="option.value">
-                {{ option.label }}
-              </option>
-            }
-          </select>
+          @if (colorSelections.length > 0) {
+            <select
+              class="color-dropdown"
+              [ngStyle]="{ 'background-color': colorSelections[$index] }"
+              [(ngModel)]="colorSelections[$index]"
+            >
+              @for (option of colorOptions; track option.label) {
+                <option
+                  [value]="option.value"
+                  [disabled]="isColorUsed(option.value, $index)">
+                  {{ option.label }}
+                </option>
+              }
+            </select>
+          }
         </div>
+        
       </div>
     </td>
     <td style="width: 80%">

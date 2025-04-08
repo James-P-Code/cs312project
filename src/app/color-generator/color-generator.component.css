@@ -156,6 +156,11 @@ th {
   background-size: 0.6rem;
 }
 
+option:disabled {
+  color: #999;
+  font-style: italic;
+}
+
 .table-one td:first-child {
   vertical-align: middle;
 }

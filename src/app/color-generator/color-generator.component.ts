@@ -3,6 +3,7 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { NgStyle } from '@angular/common';
@@ -42,6 +43,8 @@ export class ColorGeneratorComponent {
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['rows'] || changes['columns'] || changes['colors']) {
       this.initializeTable();
@@ -66,7 +69,14 @@ export class ColorGeneratorComponent {
     );
 
     this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
+
+    this.cdr.detectChanges();
   }
+
+  onColorChange(): void {
+    this.cdr.detectChanges(); // force Angular to re-run template bindings
+  }
+  
 
   private convertHeaderNumberToLetters(headerNumber: number): string {
     const alphabetSize = 26;
@@ -80,6 +90,12 @@ export class ColorGeneratorComponent {
       headerNumber = Math.floor(headerNumber / alphabetSize) - 1;
     }
     return letters;
+  }
+
+  isColorUsed(color: string, currentIndex: number): boolean {
+    return this.colorSelections.some((selected, i) =>
+      i !== currentIndex && selected === color
+    );
   }
   
   public printPage() {
