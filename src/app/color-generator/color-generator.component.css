@@ -92,7 +92,7 @@ th {
 }
 
 .table-one-wrapper {
-  padding: 0 2rem 0 1rem;
+  padding: 0 5rem 0 1rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -100,9 +100,75 @@ th {
 .table-one {
   margin-bottom: 2rem;
   width: 100%;
-  max-width: 800px;
-  min-width: 400px;
+  max-width: 1000px;
+  min-width: 700px;
   table-layout: fixed;
+}
+
+.table-one tr {
+  height: 2rem; /* or use `padding` on td if you want more control */
+}
+
+.color-select-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.radio-input {
+  margin-left: 0.5rem;
+}
+
+.dropdown-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dropdown-label {
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+
+.color-dropdown {
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding: 0rem 2rem 0rem 1rem;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  font-weight: bold;
+  color: white;
+  text-shadow:
+  -1px -1px 0 black,
+   1px -1px 0 black,
+  -1px  1px 0 black,
+   1px  1px 0 black,
+   0px  0px 2px black;
+  cursor: pointer;
+  appearance: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D'0%200%2010%206'%20xmlns%3D'http://www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M0%200l5%206%205-6z'%20fill%3D'white'%20stroke%3D'black'%20stroke-width%3D'1'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 0.6rem;
+}
+
+.table-one td:first-child {
+  vertical-align: middle;
+}
+
+.table-one td {
+  color: black;
+}
+
+.color-preview {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 .table-container {

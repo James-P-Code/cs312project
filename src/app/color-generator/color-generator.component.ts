@@ -5,8 +5,13 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 
+import { NgStyle } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-color-generator',
+  standalone: true,
+  imports: [NgStyle, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
@@ -21,10 +26,19 @@ export class ColorGeneratorComponent {
   public headerLetters: string[] = [];
   public isTableVisible = false;
 
-  public colorOptions: string[] = [
-    'red', 'orange', 'yellow', 'green', 'blue',
-    'purple', 'grey', 'brown', 'black', 'teal'
+  public colorOptions: { label: string; value: string }[] = [
+    { label: 'red',    value: 'red' },
+    { label: 'orange', value: 'orange' },
+    { label: 'yellow', value: 'yellow' },
+    { label: 'green',  value: 'green' },
+    { label: 'blue',   value: 'blue' },
+    { label: 'purple', value: 'purple' },
+    { label: 'grey',   value: 'grey' },
+    { label: 'brown',  value: '#8B4513' }, // default brown is ugly
+    { label: 'black',  value: 'black' },
+    { label: 'teal',   value: 'teal' }
   ];
+  
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
 
@@ -48,7 +62,7 @@ export class ColorGeneratorComponent {
     this.headerLetters = Array.from({ length: this.columns }, (_, i) => this.convertHeaderNumberToLetters(i));
 
     this.colorSelections = Array.from({ length: this.colors }, (_, i) =>
-      this.colorOptions[i % this.colorOptions.length]
+      this.colorOptions[i % this.colorOptions.length].value
     );
 
     this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
@@ -67,7 +81,7 @@ export class ColorGeneratorComponent {
     }
     return letters;
   }
-
+  
   public printPage() {
     window.print();
   }
