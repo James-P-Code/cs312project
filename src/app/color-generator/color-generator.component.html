@@ -1,76 +1,73 @@
+<img src="images/logo.png" alt="Logo" class="print-only" />
+<hr class="no-print">
 @if (colors > 0) {
-  <div class="table-one-wrapper">
-<table id="tableone" class="no-print table-one">
-  @for (color of colorSelections; track $index) {
-  <tr>
-    <td style="width: 20%">
-      <div class="color-select-row">
-        <input
-          type="radio"
-          class="radio-input"
-          name="selectedColor"
-          [value]="$index"
-          [checked]="selectedRowIndex === $index"
-        />
-        <div class="dropdown-wrapper">
-          <label class="dropdown-label"></label>
-          @if (colorSelections.length > 0) {
-            <select
-              class="color-dropdown"
-              [ngStyle]="{ 'background-color': colorSelections[$index] }"
-              [(ngModel)]="colorSelections[$index]"
-            >
-              @for (option of colorOptions; track option.label) {
-                <option
-                  [value]="option.value"
-                  [disabled]="isColorUsed(option.value)"
-                  [style.color]="checkColorContrast(color, isColorUsed(option.value))"
-                >
+<div class="table-one-wrapper">
+  <div class="table-wrapper">
+    <table id="tableone" class="no-print table-one">
+      @for (color of colorSelections; track $index) {
+      <tr>
+        <td style="width: 20%">
+          <div class="color-select-row">
+            <input type="radio" class="radio-input" name="selectedColor" [value]="$index"
+              [checked]="selectedRowIndex === $index" />
+            <div class="dropdown-wrapper">
+              <label class="dropdown-label"></label>
+              @if (colorSelections.length > 0) {
+              <select class="color-dropdown" [ngStyle]="{ 'background-color': colorSelections[$index] }"
+                [(ngModel)]="colorSelections[$index]">
+                @for (option of colorOptions; track option.label) {
+                <option [value]="option.value" [disabled]="isColorUsed(option.value)"
+                  [style.color]="checkColorContrast(color, isColorUsed(option.value))">
                   {{ option.label }}
                 </option>
+                }
+              </select>
               }
-            </select>
-          }
-        </div>
-        
-      </div>
-    </td>
-    <td style="width: 80%">
-      <!-- BLANK -->
-    </td>
-  </tr>
-  }
-</table>
+            </div>
+
+          </div>
+        </td>
+        <td style="width: 80%">
+          <!-- BLANK -->
+        </td>
+      </tr>
+      }
+    </table>
+  </div>
 </div>
 }
 
+<hr class="no-print">
+
 <div class="table-container">
-  <table id="coordinate-table" class="{{ printScaleClass }}">
-    <tr class="sticky-header">
-      <th></th>
-      @for (columns of columnIndices; track $index) {
+  <div class="table-wrapper">
+    <table id="coordinate-table" class="{{ printScaleClass }}">
+      <tr class="sticky-header">
+        <th></th>
+        @for (columns of columnIndices; track $index) {
 
-      <th>
-        {{ headerLetters[$index] }}
-      </th>
-      }
-    </tr>
-    @for (rows of rowIndices; track $index; let rowNumber = $index) {
-    <tr>
-      <th>
-        {{ rowNumber + 1 }}
-      </th>
-      @for (columns of columnIndices; track $index; let columnNumber = $index) {
+        <th>
+          {{ headerLetters[$index] }}
+        </th>
+        }
+      </tr>
+      @for (rows of rowIndices; track $index; let rowNumber = $index) {
+      <tr>
+        <th>
+          {{ rowNumber + 1 }}
+        </th>
+        @for (columns of columnIndices; track $index; let columnNumber = $index) {
 
-      <td (click)="cell.classList.toggle('hidden')">
-        <span #cell class="hidden">
-          {{ headerLetters[columnNumber] + (rowNumber + 1) }}
-        </span>
-      </td>
+        <td (click)="cell.classList.toggle('hidden')">
+          <span #cell class="hidden">
+            {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+          </span>
+        </td>
+        }
+      </tr>
       }
-    </tr>
-    }
-  </table>
+    </table>
+  </div>
 </div>
 
 <div class="print-button-container no-print">
