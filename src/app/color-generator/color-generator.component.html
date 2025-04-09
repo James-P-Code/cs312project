@@ -23,7 +23,9 @@
               @for (option of colorOptions; track option.label) {
                 <option
                   [value]="option.value"
-                  [disabled]="isColorUsed(option.value, $index)">
+                  [disabled]="isColorUsed(option.value)"
+                  [style.color]="checkColorContrast(color, isColorUsed(option.value))"
+                >
                   {{ option.label }}
                 </option>
               }

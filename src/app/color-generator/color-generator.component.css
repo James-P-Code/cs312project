@@ -41,7 +41,6 @@
 }
 table {
   border-collapse: collapse;
-
   table-layout: fixed;
 }
 
@@ -159,6 +158,7 @@ th {
 option:disabled {
   color: #999;
   font-style: italic;
+  text-decoration: line-through;
 }
 
 .table-one td:first-child {

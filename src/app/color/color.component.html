@@ -3,10 +3,11 @@
         Rows (1-1000):
         <input type="text" formControlName="rows" name="rows" />
 
-        @if (rows?.invalid && rows?.touched) {
-            @if (rows?.hasError('required')) { Required! }
-            @if (rows?.hasError('min')) { Minimum is 1! }
-            @if (rows?.hasError('max')) { Maximum is 1000! }
+        @if (rows?.invalid && (rows?.touched || rows?.dirty)) {
+            @if (rows?.hasError('required')) { <span class="error-box">Required!</span> }
+            @if (rows?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
+            @if (rows?.hasError('max')) { <span class="error-box">Maximum is 1000!</span> }
+            @if (rows?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
 
         }
     </p>
@@ -14,20 +15,22 @@
         Columns (1-702):
         <input type="text" formControlName="columns" name="columns" />
 
-        @if (columns?.invalid && columns?.touched) {
-            @if (columns?.hasError('required')) { Required! }
-            @if (columns?.hasError('min')) { Minimum is 1! }
-            @if (columns?.hasError('max')) { Maximum is 702! }
+        @if (columns?.invalid && (columns?.touched || columns?.dirty)) {
+            @if (columns?.hasError('required')) { <span class="error-box">Required!</span> }
+            @if (columns?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
+            @if (columns?.hasError('max')) { <span class="error-box">Maximum is 702!</span> }
+            @if (columns?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
         }
     </p>
     <p>
         Colors (1-10):
         <input type="text" formControlName="colors" name="colors" />
         
-        @if (colors?.invalid && colors?.touched) {
-            @if (colors?.hasError('required')) { Required! }
-            @if (colors?.hasError('min')) { Minimum is 1! }
-            @if (colors?.hasError('max')) { Maximum is 10! }
+        @if (colors?.invalid && (colors?.touched || colors?.dirty)) {
+            @if (colors?.hasError('required')) { <span class="error-box">Required!</span> }
+            @if (colors?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
+            @if (colors?.hasError('max')) { <span class="error-box">Maximum is 10!</span> }
+            @if (colors?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
 
         }
     </p>
