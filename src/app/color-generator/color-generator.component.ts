@@ -35,7 +35,7 @@ export class ColorGeneratorComponent {
     { label: 'blue',   value: 'blue' },
     { label: 'purple', value: 'purple' },
     { label: 'grey',   value: 'grey' },
-    { label: 'brown',  value: '#8B4513' }, // default brown is ugly
+    { label: 'brown',  value: '#8B4513' }, // default brown is ugly ;)
     { label: 'black',  value: 'black' },
     { label: 'teal',   value: 'teal' }
   ];
@@ -64,9 +64,38 @@ export class ColorGeneratorComponent {
 
     this.headerLetters = Array.from({ length: this.columns }, (_, i) => this.convertHeaderNumberToLetters(i));
 
-    this.colorSelections = Array.from({ length: this.colors }, (_, i) =>
-      this.colorOptions[i % this.colorOptions.length].value
-    );
+    const previousColorCount = this.colorSelections.length;
+    const previousSelectedIndex = this.selectedRowIndex;
+
+    this.colorSelections = Array.from({ length: this.colors }, (_, i) => this.colorOptions[i % this.colorOptions.length].value);
+
+    // Updates the radio button on initialization or updates so one is always selected.
+    // Lots of logs for different edge cases, possibly remove/comment out after shipping finished product
+    if (this.colorSelections.length > 0 && (this.selectedRowIndex === null || this.selectedRowIndex >= this.colorSelections.length)) {
+      this.selectedRowIndex = 0;
+      console.log(`
+        [ColorGenerator] Radio button reset triggered.
+        Previous color count: ${previousColorCount}, New color count: ${this.colorSelections.length},
+        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
+    } else if (this.colorSelections.length > 0 && this.selectedRowIndex === null) {
+      this.selectedRowIndex = 0;
+      console.log(`
+        [ColorGenerator] Initial radio button selection.
+        Color count: ${this.colorSelections.length}, Selected index set to: ${this.selectedRowIndex}`);
+    } else if (this.colorSelections.length === 0 && this.selectedRowIndex !== null) {
+      this.selectedRowIndex = null;
+      console.log(`
+        [ColorGenerator] Radio button deselected due to no available colors.
+        Previous selected index: ${previousSelectedIndex}`);
+    } else if (this.selectedRowIndex !== previousSelectedIndex) {
+      console.log(`
+        [ColorGenerator] Selected index changed (unlikely due to table update logic).
+        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
+    } else {
+      console.log(`
+        [ColorGenerator] Table initialized/updated, radio button selection unchanged.
+        Color count: ${this.colorSelections.length}, Current selected index: ${this.selectedRowIndex}`);
+    }
 
     this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
 
