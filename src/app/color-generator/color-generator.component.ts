@@ -92,10 +92,20 @@ export class ColorGeneratorComponent {
     return letters;
   }
 
-  isColorUsed(color: string, currentIndex: number): boolean {
-    return this.colorSelections.some((selected, i) =>
-      i !== currentIndex && selected === color
-    );
+  isColorUsed(color: string): boolean {
+    return this.colorSelections.includes(color);
+
+  }
+
+  checkColorContrast(color: string, isDisabled: boolean): string { // adjusts some of the hard to see dropdown options
+    let textColor = 'white';
+
+    if (['yellow', 'orange'].includes(color)
+      || (isDisabled && ['green', 'purple', 'grey', '#8B4513', 'teal'].includes(color))) {
+      textColor = 'black';
+    }
+
+    return textColor;
   }
   
   public printPage() {
