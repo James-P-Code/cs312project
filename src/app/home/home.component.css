@@ -40,8 +40,8 @@
     100% { transform: rotateY(360deg); }
   }
   
-
   /* 
   WORKS CITED
   Floating Animation: https://www.geeksforgeeks.org/css-floating-animation/
+  Multiple Animations: https://stackoverflow.com/questions/26986129/play-multiple-css-animations-at-the-same-time
   */
