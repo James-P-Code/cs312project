@@ -1,0 +1,47 @@
+:host {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;    /* Center vertically */
+  }
+
+  .logo-container {
+    animation: hoverAnimation 3s infinite alternate;
+  }
+
+  .logo {
+    display: block;
+    max-width: 700px; 
+    max-height: 700px;
+    width: auto;
+    height: auto;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    animation: rotateAnimation 8s infinite linear;
+  }
+
+  .logo:hover, .logo-container:hover{
+    filter: drop-shadow(0 0 30px rgba(109, 74, 226, 0.7)); /* accent-two: 6d4ae2 */
+  }
+
+  logo-link { /* Style the link if needed */
+    text-decoration: none; /* Remove default underline */
+    display: block; /* Make the link a block-level element to contain the image properly */
+  }
+
+  @keyframes hoverAnimation {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-150px); }
+  }
+  
+  @keyframes rotateAnimation {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+  }
+  
+
+  /* 
+  WORKS CITED
+  Floating Animation: https://www.geeksforgeeks.org/css-floating-animation/
+  */
