@@ -21,13 +21,13 @@
     animation: rotateAnimation 8s infinite linear;
   }
 
-  .logo:hover, .logo-container:hover{
+  .logo:hover{
     filter: drop-shadow(0 0 30px rgba(109, 74, 226, 0.7)); /* accent-two: 6d4ae2 */
   }
 
-  logo-link { /* Style the link if needed */
-    text-decoration: none; /* Remove default underline */
-    display: block; /* Make the link a block-level element to contain the image properly */
+  logo-link {
+    text-decoration: none;
+    display: block;
   }
 
   @keyframes hoverAnimation {

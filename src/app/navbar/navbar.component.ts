@@ -16,3 +16,4 @@ import { NavbarItem } from './navbar_item/navbar_item';
       new NavbarItem('About', 'about'),
     ];
   }
+  
