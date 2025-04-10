@@ -34,10 +34,10 @@ export class ColorGeneratorComponent {
     { label: 'green',  value: 'green' },
     { label: 'blue',   value: 'blue' },
     { label: 'purple', value: 'purple' },
+    { label: 'teal',   value: 'teal' },
     { label: 'grey',   value: 'grey' },
     { label: 'brown',  value: '#8B4513' }, // default brown is ugly ;)
     { label: 'black',  value: 'black' },
-    { label: 'teal',   value: 'teal' }
   ];
   
   public selectedRowIndex: number | null = null;
