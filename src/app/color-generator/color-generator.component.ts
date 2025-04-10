@@ -6,13 +6,15 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 
+import {ScrollingModule} from '@angular/cdk/scrolling';
+
 import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-color-generator',
   standalone: true,
-  imports: [NgStyle, FormsModule],
+  imports: [NgStyle, FormsModule, ScrollingModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
