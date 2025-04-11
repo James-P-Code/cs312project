@@ -1,4 +1,4 @@
-<img src="images/logo.png" alt="Logo" class="print-only" />
+<img src="images/logo.png" alt="Logo" class="print-only print-logo" />
 <hr class="no-print">
 @if (colors > 0) {
 <div class="table-one-wrapper">
@@ -8,13 +8,8 @@
       <tr>
         <td style="width: 20%">
           <div class="color-select-row">
-            <input 
-              type="radio" 
-              class="radio-input" 
-              name="selectedColor" 
-              [value]="$index"
-              [(ngModel)]="selectedRowIndex"
-            />
+            <input type="radio" class="radio-input" name="selectedColor" [value]="$index"
+              [(ngModel)]="selectedRowIndex" />
             <div class="dropdown-wrapper">
               <label class="dropdown-label"></label>
               @if (colorSelections.length > 0) {
@@ -33,7 +28,6 @@
           </div>
         </td>
         <td style="width: 80%">
-          <!-- BLANK -->
         </td>
       </tr>
       }
@@ -46,34 +40,58 @@
 
 <div class="table-container">
   <div class="table-wrapper">
-    <table id="coordinate-table" class="{{ printScaleClass }}">
-      <cdk-virtual-scroll-viewport itemSize="20" minBufferPx="1200" maxBufferPx="1800" appendOnly class="example-viewport">
+    @if (isPrinting) { <!-- Printable Table -->
+    <table id="coordinate-table" class="{{ printScaleClass }} print-only">
       <tr class="sticky-header">
         <th></th>
         @for (columns of columnIndices; track $index) {
-
-        <th>
-          {{ headerLetters[$index] }}
-        </th>
+        <th>{{ headerLetters[$index] }}</th>
         }
       </tr>
-      <tr *cdkVirtualFor="rows of rowIndices; track index; let rowNumber = index;">
-        <th>
-          {{ rowNumber + 1 }}
-        </th>
-        @for (columns of columnIndices; track $index; let columnNumber = $index) {
-
-        <td (click)="cell.classList.toggle('hidden')">
-          <span #cell class="hidden">
-            {{ headerLetters[columnNumber] + (rowNumber + 1) }}
-          </span>
+      @for (row of rowIndices; track $index; let rowNumber = $index) {
+      <tr>
+        <th>{{ rowNumber + 1 }}</th>
+        @for (column of columnIndices; track $index; let columnNumber = $index) {
+        <td>
+          @if (isRevealed(rowNumber, columnNumber)) {
+          {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+          }
         </td>
         }
       </tr>
-    </cdk-virtual-scroll-viewport>
+      }
     </table>
+    }
+    @if (!isPrinting) { <!-- Visible Table -->
+    <cdk-virtual-scroll-viewport itemSize="20" minBufferPx="1200" maxBufferPx="1800" appendOnly
+      class="example-viewport screen-only">
+      <table id="coordinate-table" class="{{ printScaleClass }}">
+        <tr class="sticky-header">
+          <th></th>
+          @for (columns of columnIndices; track $index) {
+          <th>{{ headerLetters[$index] }}</th>
+          }
+        </tr>
+        @for (row of rowIndices; track $index; let rowNumber = $index) {
+        <tr>
+          <th>{{ rowNumber + 1 }}</th>
+          @for (column of columnIndices; track $index; let columnNumber = $index) {
+          <td (click)="onCellClick(rowNumber, columnNumber)">
+            <span [class.hidden]="!isRevealed(rowNumber, columnNumber)">
+              {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+            </span>
+          </td>
+          }
+        </tr>
+        }
+      </table>
+    </cdk-virtual-scroll-viewport>
+    }
+
   </div>
 </div>
+
+
 
 <div class="print-button-container no-print">
   <button (click)="printPage()">Print</button>
