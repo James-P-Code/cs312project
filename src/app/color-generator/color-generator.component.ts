@@ -3,16 +3,19 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
+
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-color-generator',
   standalone: true,
-  imports: [NgStyle, FormsModule],
+  imports: [NgStyle, FormsModule, ScrollingModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
@@ -28,18 +31,18 @@ export class ColorGeneratorComponent {
   public isTableVisible = false;
 
   public colorOptions: { label: string; value: string }[] = [
-    { label: 'red',    value: 'red' },
+    { label: 'red', value: 'red' },
     { label: 'orange', value: 'orange' },
     { label: 'yellow', value: 'yellow' },
-    { label: 'green',  value: 'green' },
-    { label: 'blue',   value: 'blue' },
+    { label: 'green', value: 'green' },
+    { label: 'blue', value: 'blue' },
     { label: 'purple', value: 'purple' },
-    { label: 'teal',   value: 'teal' },
-    { label: 'grey',   value: 'grey' },
-    { label: 'brown',  value: '#8B4513' }, // default brown is ugly ;)
-    { label: 'black',  value: 'black' },
+    { label: 'teal', value: 'teal' },
+    { label: 'grey', value: 'grey' },
+    { label: 'brown', value: '#8B4513' }, // default brown is ugly ;)
+    { label: 'black', value: 'black' },
   ];
-  
+
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
 
@@ -62,27 +65,42 @@ export class ColorGeneratorComponent {
     this.rowIndices = new Array(this.rows);
     this.columnIndices = new Array(this.columns);
 
-    this.headerLetters = Array.from({ length: this.columns }, (_, i) => this.convertHeaderNumberToLetters(i));
+    this.headerLetters = Array.from({ length: this.columns }, (_, i) =>
+      this.convertHeaderNumberToLetters(i)
+    );
 
     const previousColorCount = this.colorSelections.length;
     const previousSelectedIndex = this.selectedRowIndex;
 
-    this.colorSelections = Array.from({ length: this.colors }, (_, i) => this.colorOptions[i % this.colorOptions.length].value);
+    this.colorSelections = Array.from(
+      { length: this.colors },
+      (_, i) => this.colorOptions[i % this.colorOptions.length].value
+    );
 
     // Updates the radio button on initialization or updates so one is always selected.
     // Lots of logs for different edge cases, possibly remove/comment out after shipping finished product
-    if (this.colorSelections.length > 0 && (this.selectedRowIndex === null || this.selectedRowIndex >= this.colorSelections.length)) {
+    if (
+      this.colorSelections.length > 0 &&
+      (this.selectedRowIndex === null ||
+        this.selectedRowIndex >= this.colorSelections.length)
+    ) {
       this.selectedRowIndex = 0;
       console.log(`
         [ColorGenerator] Radio button reset triggered.
         Previous color count: ${previousColorCount}, New color count: ${this.colorSelections.length},
         Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
-    } else if (this.colorSelections.length > 0 && this.selectedRowIndex === null) {
+    } else if (
+      this.colorSelections.length > 0 &&
+      this.selectedRowIndex === null
+    ) {
       this.selectedRowIndex = 0;
       console.log(`
         [ColorGenerator] Initial radio button selection.
         Color count: ${this.colorSelections.length}, Selected index set to: ${this.selectedRowIndex}`);
-    } else if (this.colorSelections.length === 0 && this.selectedRowIndex !== null) {
+    } else if (
+      this.colorSelections.length === 0 &&
+      this.selectedRowIndex !== null
+    ) {
       this.selectedRowIndex = null;
       console.log(`
         [ColorGenerator] Radio button deselected due to no available colors.
@@ -105,7 +123,6 @@ export class ColorGeneratorComponent {
   onColorChange(): void {
     this.cdr.detectChanges(); // force Angular to re-run template bindings
   }
-  
 
   private convertHeaderNumberToLetters(headerNumber: number): string {
     const alphabetSize = 26;
@@ -123,34 +140,30 @@ export class ColorGeneratorComponent {
 
   isColorUsed(color: string): boolean {
     return this.colorSelections.includes(color);
-
   }
 
-  checkColorContrast(color: string, isDisabled: boolean): string { // adjusts some of the hard to see dropdown options
+  checkColorContrast(color: string, isDisabled: boolean): string {
+    // adjusts some of the hard to see dropdown options
     let textColor = 'white';
 
-    if (['yellow', 'orange'].includes(color)
-      || (isDisabled && ['green', 'purple', 'grey', '#8B4513', 'teal'].includes(color))) {
+    if (
+      ['yellow', 'orange'].includes(color) ||
+      (isDisabled &&
+        ['green', 'purple', 'grey', '#8B4513', 'teal'].includes(color))
+    ) {
       textColor = 'black';
     }
 
     return textColor;
   }
-  
+
   public printPage() {
-    window.print();
+    this.isPrinting = true;
+
+    setTimeout(() => {
+      window.print();
+    }, 100);
   }
-
-  // get tableColumnWidth(): string {
-  //   const colCount = this.columnIndices.length;
-  //   return colCount > 27 ? `${1000 / colCount}px` : 'auto';
-  // }
-
-  // get tableFontSize(): string {
-  //   const colCount = this.columnIndices.length;
-  //   let scale = 31.78 / Math.pow(colCount, 1.042);
-  //   return colCount > 28 ? `${scale}rem` : '1rem';
-  // }
 
   get printScaleClass(): string {
     const colCount = this.columnIndices.length;
@@ -158,5 +171,31 @@ export class ColorGeneratorComponent {
     if (colCount < 80) return 'scale-75';
     if (colCount < 120) return 'scale-50';
     return 'scale-30';
+  }
+
+  isPrinting = false;
+
+  @HostListener('window:beforeprint', [])
+  onBeforePrint() {
+    this.isPrinting = true;
+  }
+
+  @HostListener('window:afterprint', [])
+  onAfterPrint() {
+    this.isPrinting = false;
+  }
+
+  revealedCoordinates = new Set<string>();
+  onCellClick(row: number, col: number) {
+    const coord = `${row},${col}`;
+    if (this.revealedCoordinates.has(coord)) {
+      this.revealedCoordinates.delete(coord);
+    } else {
+      this.revealedCoordinates.add(coord);
+    }
+  }
+
+  isRevealed(row: number, col: number): boolean {
+    return this.revealedCoordinates.has(`${row},${col}`);
   }
 }
