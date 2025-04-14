@@ -1,0 +1,26 @@
+TODO:
+- When updating number of colors on table 1, save currently selected colors.
+
+- Table 2 cell will change colors and contain index while the right side of table 1 will also add the index of the cell.
+
+- Print will still be black and white but will now include table 1 with indeces.
+
+- Set up database for colors with ID (PK, users will not interact with), Color Name, Hex Value
+- User will be able to update color name and value
+- Table 1 will have a size of n instead of 10. (Will still preinitialize to 10)
+- Bonus points if user can change color name and hex at the same time.
+
+GRADING BREAKDOWN:
+- Ability to paint with a chosen color, coordinate appears in table when painted (10 points)
+- Cells change colors when drop down changed (10 points)
+- Print view shows coordinates, no colored-in cells (10 points)
+- DB Access Page (10 Points)
+- DB table added to store colors, application pulls from table to populate drop downs (5 points)
+- User interface to add Colors (10) Points
+- User interface to delete colors (10 points)
+- User Interface to edit colors (5 points)
+- Final Polish, app is a well-polished, good looking, application without errors (30 points)
+   - This is a large category and basically will be an overall impression of your site.  
+   - Most of the submissions to Milestone 1 would have received 15-20 points on this (so don't stress too much!).
+   - Features that aren't implemented won't count against, but if something is implemented, it should work nicely.
+
