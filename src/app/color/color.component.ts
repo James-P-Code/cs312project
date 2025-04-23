@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ColorGeneratorComponent } from "../color-generator/color-generator.component";
+import { Database } from '../api/database';
 
 @Component({
   selector: 'app-color',
@@ -10,23 +11,33 @@ import { ColorGeneratorComponent } from "../color-generator/color-generator.comp
 })
 
 export class ColorComponent {
-  rowsColumnsColorsForm = new FormGroup({
-    rows: new FormControl('', 
-              [Validators.required, 
-              Validators.min(1), 
-              Validators.max(1000),
-              Validators.pattern('\\d+')]),
-    columns: new FormControl('',
-              [Validators.required, 
-               Validators.min(1), 
-               Validators.max(702),
-               Validators.pattern('\\d+')]),
-    colors: new FormControl('', 
-              [Validators.required,
-                Validators.min(1),
-                Validators.max(10),
-                Validators.pattern('\\d+')])
-  });
+
+  public numberOfColorsInDatabase!: number;
+  public rowsColumnsColorsForm!: FormGroup;
+
+  constructor(private database: Database) {
+    this.database.getColorCount().subscribe(colors => {
+      this.numberOfColorsInDatabase = colors.count;
+
+      this.rowsColumnsColorsForm = new FormGroup({
+        rows: new FormControl('', 
+                  [Validators.required, 
+                  Validators.min(1), 
+                  Validators.max(1000),
+                  Validators.pattern('\\d+')]),
+        columns: new FormControl('',
+                  [Validators.required, 
+                   Validators.min(1), 
+                   Validators.max(702),
+                   Validators.pattern('\\d+')]),
+        colors: new FormControl('', 
+                  [Validators.required,
+                    Validators.min(1),
+                    Validators.max(this.numberOfColorsInDatabase),
+                    Validators.pattern('\\d+')])
+      });
+    })
+  }
 
   get rows() {
     return this.rowsColumnsColorsForm.get('rows');

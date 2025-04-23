@@ -12,4 +12,9 @@ export class Database {
         const params = new HttpParams().set('param', 'colors');
         return this.http.get<{id: number, name: string, hex_value : string}[]>(this.apiURL, {params});
     }
+
+    public getColorCount() {
+        const params = new HttpParams().set('param', 'count');
+        return this.http.get<{count: number}>(this.apiURL, {params});
+    }
 }
