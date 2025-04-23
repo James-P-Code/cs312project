@@ -3,14 +3,17 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
-
 import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
+import { Database } from '../api/database';
+import { ContrastChecker } from '../utils/contrast-checker';
+
+type ColorFromDatabase = { id: number, name: string, hex_value: string };
 
 @Component({
   selector: 'app-color-generator',
@@ -20,6 +23,7 @@ import { HostListener } from '@angular/core';
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
 })
+
 export class ColorGeneratorComponent {
   @Input() rows: number = 0;
   @Input() columns: number = 0;
@@ -30,23 +34,12 @@ export class ColorGeneratorComponent {
   public headerLetters: string[] = [];
   public isTableVisible = false;
 
-  public colorOptions: { label: string; value: string }[] = [
-    { label: 'red', value: 'red' },
-    { label: 'orange', value: 'orange' },
-    { label: 'yellow', value: 'yellow' },
-    { label: 'green', value: 'green' },
-    { label: 'blue', value: 'blue' },
-    { label: 'purple', value: 'purple' },
-    { label: 'teal', value: 'teal' },
-    { label: 'grey', value: 'grey' },
-    { label: 'brown', value: '#8B4513' }, // default brown is ugly ;)
-    { label: 'black', value: 'black' },
-  ];
+  public colorOptions: { label: string; value: string }[] =[];
 
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private database: Database) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['rows'] || changes['columns'] || changes['colors']) {
@@ -68,14 +61,11 @@ export class ColorGeneratorComponent {
     this.headerLetters = Array.from({ length: this.columns }, (_, i) =>
       this.convertHeaderNumberToLetters(i)
     );
+    
+    this.getColorsFromDatabase();
 
     const previousColorCount = this.colorSelections.length;
     const previousSelectedIndex = this.selectedRowIndex;
-
-    this.colorSelections = Array.from(
-      { length: this.colors },
-      (_, i) => this.colorOptions[i % this.colorOptions.length].value
-    );
 
     // Updates the radio button on initialization or updates so one is always selected.
     // Lots of logs for different edge cases, possibly remove/comment out after shipping finished product
@@ -116,11 +106,29 @@ export class ColorGeneratorComponent {
     }
 
     this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
-
-    this.cdr.detectChanges();
   }
 
-  onColorChange(): void {
+  private getColorsFromDatabase(): void {
+    this.database.getColors().subscribe((colors) => {
+      this.setColorOptions(colors);
+    })
+  }
+
+  private setColorOptions(colors: ColorFromDatabase[]) {
+    this.colorOptions = colors.map((color) => ({
+      label: color.name,
+      value: color.hex_value
+    }));
+
+    this.colorSelections = Array.from(
+      { length: this.colors },
+      (_, i) => this.colorOptions[i % this.colorOptions.length].value
+    );
+    
+    this.onColorChange();
+  }
+
+  private onColorChange(): void {
     this.cdr.detectChanges(); // force Angular to re-run template bindings
   }
 
@@ -142,19 +150,34 @@ export class ColorGeneratorComponent {
     return this.colorSelections.includes(color);
   }
 
-  checkColorContrast(color: string, isDisabled: boolean): string {
-    // adjusts some of the hard to see dropdown options
-    let textColor = 'white';
+  checkColorContrast(backgroundColor: string, isDisabled: boolean): string {
+    // adjusts the color dropdown selection text based on disabled state and background color
+    let textColor = "";
 
-    if (
-      ['yellow', 'orange'].includes(color) ||
-      (isDisabled &&
-        ['green', 'purple', 'grey', '#8B4513', 'teal'].includes(color))
-    ) {
-      textColor = 'black';
+    // set the initial text color
+    if (isDisabled) { // light grey if selection option is disabled
+      textColor = "#D3D3D3";
+    } else { // otherwise set the initial color based on the background
+      let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
+      const lumiescenceThreshold = 0.179;
+      textColor = backgroundLuminescence > lumiescenceThreshold ? "#000000" : "#FFFFFF";
+    }
+
+    // check the contrast of the initial text color vs the background
+    let contrastValue = ContrastChecker.constrastRatio(textColor, backgroundColor);
+    const minimumContrast = 4.5;
+
+    if (contrastValue < minimumContrast) {
+      textColor = "#000000";
     }
 
     return textColor;
+  }
+
+  private setDropDownTextColor(backgroundColor: string) {
+    let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
+    const lumiescenceThreshold = 0.179;
+    return backgroundLuminescence > lumiescenceThreshold ? "#000000" : "#FFFFFF";
   }
 
   public printPage() {

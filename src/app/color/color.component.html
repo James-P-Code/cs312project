@@ -23,13 +23,13 @@
         }
     </p>
     <p>
-        Colors (1-10):
+        Colors (1-{{ this.numberOfColorsInDatabase }}):
         <input type="text" formControlName="colors" name="colors" />
         
         @if (colors?.invalid && (colors?.touched || colors?.dirty)) {
             @if (colors?.hasError('required')) { <span class="error-box">Required!</span> }
             @if (colors?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
-            @if (colors?.hasError('max')) { <span class="error-box">Maximum is 10!</span> }
+            @if (colors?.hasError('max')) { <span class="error-box">Maximum is {{ this.numberOfColorsInDatabase }}!</span> }
             @if (colors?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
 
         }
