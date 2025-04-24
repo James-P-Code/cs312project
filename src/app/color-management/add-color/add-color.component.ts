@@ -14,8 +14,6 @@ export class AddColorComponent {
   public addColorForm!: FormGroup;
   public addColorSuccess: boolean = false;
   public addColorFailure: boolean = false;
-  public addColorDuplicateName: boolean = false;
-  public addColorDuplicateHexValue: boolean = false;
 
   public constructor(private database: Database) {
     this.initializeAddColorForm();
@@ -23,7 +21,7 @@ export class AddColorComponent {
 
   private initializeAddColorForm() {
     this.addColorForm = new FormGroup({
-      colorName: new FormControl('', [Validators.required]),
+      colorName: new FormControl('', [Validators.required, Validators.pattern('.*\\S.*')]),
       colorValue: new FormControl('#e26daa')});
   }
 
@@ -38,29 +36,17 @@ export class AddColorComponent {
   public onAddColorSubmit() {
     let colorName = String(this.addColorForm.value.colorName);
     let colorValue = String(this.addColorForm.value.colorValue);
+    const successCode = 200;
 
     this.database.postAddColor(colorName, colorValue).subscribe({
-      next: code => {
-        this.checkResponseCode(code);
-        console.log("Response Code " + code);
+      next: responseCode => {
+        console.log("Response code: " + responseCode);
+        responseCode == successCode ? this.addColorSuccess = true : this.addColorFailure = true;
       },
-      error: (err: HttpErrorResponse) => {
-        console.log("Error: " + err.status);
+      error: (errorResponse: HttpErrorResponse) => {
+        console.log("Error: " + errorResponse.status);
         this.addColorFailure = true;
       }
     });
-  }
-
-  private checkResponseCode(code: number) {
-    const successCode: number = 201;
-    const duplicateName: number = 409;
-    const duplcateHexValue: number = 422;
-
-    switch(code) {
-      case successCode: this.addColorSuccess = true; break;
-      case duplicateName: this.addColorDuplicateName = true; break;
-      case duplcateHexValue: this.addColorDuplicateHexValue = true; break;
-      default: this.addColorFailure = true;
-    }
   }
 }

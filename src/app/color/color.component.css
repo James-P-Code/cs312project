@@ -11,8 +11,8 @@ form p {
     padding: 5px;
     margin-left: 4px;
     color: #fff;
-    display: inline-flex; /* Use inline-flex to align content */
-    align-items: center;  /* Vertically center content */
+    display: inline-flex;
+    align-items: center;
     vertical-align: middle;
 }
 
