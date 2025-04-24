@@ -13,6 +13,7 @@ import { NavbarItem } from './navbar_item/navbar_item';
 
     navBarItems: NavbarItem[] = [
       new NavbarItem('Color Coordinate Generator', 'color'),
+      new NavbarItem('Color Management', 'color-management'),
       new NavbarItem('About', 'about'),
     ];
   }

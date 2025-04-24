@@ -13,29 +13,28 @@ import { Database } from '../api/database';
 export class ColorComponent {
 
   public numberOfColorsInDatabase!: number;
-  public rowsColumnsColorsForm!: FormGroup;
+  public rowsColumnsColorsForm = new FormGroup({
+    rows: new FormControl('', 
+              [Validators.required, 
+              Validators.min(1), 
+              Validators.max(1000),
+              Validators.pattern('\\d+')]),
+    columns: new FormControl('',
+              [Validators.required, 
+               Validators.min(1), 
+               Validators.max(702),
+               Validators.pattern('\\d+')]),
+    colors: new FormControl('', 
+              [Validators.required,
+                Validators.min(1),
+                Validators.pattern('\\d+')])
+  });
 
   constructor(private database: Database) {
     this.database.getColorCount().subscribe(colors => {
       this.numberOfColorsInDatabase = colors.count;
-
-      this.rowsColumnsColorsForm = new FormGroup({
-        rows: new FormControl('', 
-                  [Validators.required, 
-                  Validators.min(1), 
-                  Validators.max(1000),
-                  Validators.pattern('\\d+')]),
-        columns: new FormControl('',
-                  [Validators.required, 
-                   Validators.min(1), 
-                   Validators.max(702),
-                   Validators.pattern('\\d+')]),
-        colors: new FormControl('', 
-                  [Validators.required,
-                    Validators.min(1),
-                    Validators.max(this.numberOfColorsInDatabase),
-                    Validators.pattern('\\d+')])
-      });
+      const colorsControl = this.rowsColumnsColorsForm.controls.colors;
+      colorsControl.addValidators(Validators.max(this.numberOfColorsInDatabase));
     })
   }
 

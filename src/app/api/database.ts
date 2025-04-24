@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 
@@ -16,5 +17,12 @@ export class Database {
     public getColorCount() {
         const params = new HttpParams().set('param', 'count');
         return this.http.get<{count: number}>(this.apiURL, {params});
+    }
+
+    public postAddColor(colorName: string, colorValue: string) {
+        const params = {colorName, colorValue};
+
+        return this.http.post(this.apiURL, params, { observe: 'response' })
+                        .pipe(map(response => response.status));  
     }
 }
