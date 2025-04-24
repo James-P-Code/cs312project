@@ -20,7 +20,8 @@ export class Database {
     }
 
     public postAddColor(colorName: string, colorValue: string) {
-        const params = {colorName, colorValue};
+        const action = "add";
+        const params = {action, colorName, colorValue};
 
         return this.http.post(this.apiURL, params, { observe: 'response' })
                         .pipe(map(response => response.status));  
