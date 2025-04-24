@@ -1,24 +1,2 @@
-<div class="form-container">
-    <div class="form-text">
-        <h1>Add Color</h1>
-        <hr />
-        <form [formGroup]="addColorForm" (ngSubmit)="onAddColorSubmit()">
-            <p>
-                Color Name:
-                <input type="text" formControlName="colorName" name="colorName" />
-
-                @if (addColorFormColorName?.invalid && (addColorFormColorName?.touched || addColorFormColorName?.dirty)) {
-                    @if (addColorFormColorName?.hasError('required')) { <span class="error-box">Required!</span> }
-                }
-            </p>
-            <p>
-                Color Value:
-                <input type="color" formControlName="colorValue" name="colorValue" />
-            </p>
-            <div class="submit-button-container">
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-    </div>
-</div>
+<app-add-color></app-add-color>
 

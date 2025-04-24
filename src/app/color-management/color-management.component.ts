@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Database } from '../api/database';
+import { AddColorComponent } from "./add-color/add-color.component";
 
 @Component({
   selector: 'app-color-management',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AddColorComponent],
   templateUrl: './color-management.component.html',
   styleUrl: './color-management.component.css'
 })
