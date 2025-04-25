@@ -5,8 +5,8 @@
   <div class="table-wrapper">
     <table id="tableone" class="no-print table-one">
       @for (color of colorSelections; track $index) {
-      <tr>
-        <td style="width: 20%">
+      <tr id="color-select-row-{{ $index }}">
+        <td style=" width: 20%">
           <div class="color-select-row">
             <input type="radio" class="radio-input" name="selectedColor" [value]="$index"
               [(ngModel)]="selectedRowIndex" />
@@ -28,7 +28,10 @@
 
           </div>
         </td>
-        <td style="width: 80%">
+        <td style="width: 80%" class="color-select-row">
+          <div class="color-select-row">
+            
+          </div>
         </td>
       </tr>
       }
