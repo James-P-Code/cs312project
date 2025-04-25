@@ -9,19 +9,12 @@ export class Database {
 
     constructor(private http: HttpClient) {}
 
-    public getColors() {
-        const params = new HttpParams().set('param', 'colors');
-        return this.http.get<{id: number, name: string, hex_value : string}[]>(this.apiURL, {params});
+    public getRequest<T>(params: HttpParams) {
+        return this.http.get<T>(this.apiURL, { params });
     }
 
-    public getColorCount() {
-        const params = new HttpParams().set('param', 'count');
-        return this.http.get<{count: number}>(this.apiURL, {params});
-    }
-
-    public postAddColor(colorName: string, colorValue: string) {
-        const action = "add";
-        const params = {action, colorName, colorValue};
+    public postRequest(action: string, postParams: Map<string, string>) {
+        const params = {action, ...Object.fromEntries(postParams)};
 
         return this.http.post(this.apiURL, params, { observe: 'response' })
                         .pipe(map(response => response.status));  

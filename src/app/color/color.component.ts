@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ColorGeneratorComponent } from "../color-generator/color-generator.component";
 import { Database } from '../api/database';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-color',
@@ -31,7 +32,8 @@ export class ColorComponent {
   });
 
   constructor(private database: Database) {
-    this.database.getColorCount().subscribe(colors => {
+    let httpParams = new HttpParams({ fromObject: {param: "count"} });
+    this.database.getRequest<{count: number}>(httpParams).subscribe(colors => {
       this.numberOfColorsInDatabase = colors.count;
       const colorsControl = this.rowsColumnsColorsForm.controls.colors;
       colorsControl.addValidators(Validators.max(this.numberOfColorsInDatabase));
