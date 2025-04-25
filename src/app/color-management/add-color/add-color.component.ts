@@ -34,11 +34,14 @@ export class AddColorComponent {
   }
 
   public onAddColorSubmit() {
-    let colorName = String(this.addColorForm.value.colorName);
-    let colorValue = String(this.addColorForm.value.colorValue);
     const successCode = 200;
 
-    this.database.postAddColor(colorName, colorValue).subscribe({
+    let postParams = new Map<string, string>([
+        ["colorName", String(this.addColorForm.value.colorName)],
+        ["colorValue", String(this.addColorForm.value.colorValue)]
+    ]);
+
+    this.database.postRequest("add", postParams).subscribe({
       next: responseCode => {
         console.log("Response code: " + responseCode);
         responseCode == successCode ? this.addColorSuccess = true : this.addColorFailure = true;

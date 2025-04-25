@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
+import { HttpParams } from '@angular/common/http';
 
 type ColorFromDatabase = { id: number, name: string, hex_value: string };
 
@@ -109,7 +110,8 @@ export class ColorGeneratorComponent {
   }
 
   private getColorsFromDatabase(): void {
-    this.database.getColors().subscribe((colors) => {
+    let httpParams = new HttpParams({ fromObject: {param: "colors"} })
+    this.database.getRequest<ColorFromDatabase[]>(httpParams).subscribe((colors) => {
       this.setColorOptions(colors);
     })
   }
