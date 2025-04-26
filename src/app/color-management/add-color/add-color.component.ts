@@ -34,7 +34,7 @@ export class AddColorComponent {
   }
 
   public onAddColorSubmit() {
-    const successCode = 200;
+    const successCode = 201;
 
     let postParams = new Map<string, string>([
         ["colorName", String(this.addColorForm.value.colorName)],
@@ -47,7 +47,7 @@ export class AddColorComponent {
         responseCode == successCode ? this.addColorSuccess = true : this.addColorFailure = true;
       },
       error: (errorResponse: HttpErrorResponse) => {
-        console.log("Error: " + errorResponse.status);
+        console.log("Error: " + errorResponse.message);
         this.addColorFailure = true;
       }
     });
