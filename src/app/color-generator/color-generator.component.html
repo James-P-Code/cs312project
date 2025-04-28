@@ -7,7 +7,7 @@
       @for (color of colorSelections; track $index) {
       <tr id="color-select-row-{{ $index }}">
         <td style=" width: 20%">
-          <div class="color-select-row">
+          <div class="color-select-row" id="{{colorSelections[$index]}}">
             <input type="radio" class="radio-input" name="selectedColor" [value]="$index"
               [(ngModel)]="selectedRowIndex" />
             <div class="dropdown-wrapper">
@@ -30,7 +30,7 @@
         </td>
         <td style="width: 80%" class="color-select-row">
           <div class="color-select-row">
-            
+
           </div>
         </td>
       </tr>
@@ -80,7 +80,7 @@
         <tr>
           <th>{{ rowNumber + 1 }}</th>
           @for (column of columnIndices; track $index; let columnNumber = $index) {
-          <td (click)="onCellClick(rowNumber, columnNumber)">
+          <td (click)="onCellClick(rowNumber, columnNumber)" id="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
             <span [class.hidden]="!isRevealed(rowNumber, columnNumber)">
               {{ headerLetters[columnNumber] + (rowNumber + 1) }}
             </span>

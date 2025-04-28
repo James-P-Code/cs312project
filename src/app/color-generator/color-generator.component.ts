@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
 import { HttpParams } from '@angular/common/http';
-import { find, map } from 'rxjs';
+import { find, first, map } from 'rxjs';
 
 type ColorFromDatabase = { id: number; name: string; hex_value: string };
 
@@ -182,6 +182,8 @@ export class ColorGeneratorComponent {
       textColor = '#000000';
     }
 
+    this.paintColorFromHashMap(this.colorSelectionMap);
+
     return textColor;
   }
 
@@ -245,13 +247,11 @@ export class ColorGeneratorComponent {
         this.colorSelectionMap[this.selectedRowIndex!].push(coord);
       }
     } else {
-      console.log(`Found coordinate in hashmap: ${coord}`);
       this.removeCoordinateFromList(coord);
     }
 
-    console.log(this.colorSelectionMap);
-
     this.updateColorCoordinates(this.colorSelectionMap);
+    this.paintColorFromHashMap(this.colorSelectionMap);
   }
 
   public isCoordinateInHashMap(coord: string): boolean {
@@ -274,9 +274,22 @@ export class ColorGeneratorComponent {
     return -1;
   }
 
+  public formatCoord(coord: string): string {
+    return (
+      this.headerLetters[parseInt(coord.split(',')[1])] +
+      (parseInt(coord.split(',')[0]) + 1).toString()
+    );
+  }
+
   public removeCoordinateFromList(coord: string | null) {
     if (coord === null) return;
-    console.log(`Removing coordinate from list: ${coord}`);
+    console.log(`Removing coordinate from list: ${this.formatCoord(coord)} `);
+    const coordCell = document.getElementById(
+      this.formatCoord(coord)
+    ) as HTMLElement;
+    if (coordCell) {
+      coordCell.style.backgroundColor = 'white';
+    }
     let coordIndex = this.findColorCoordinateIndex(coord);
     this.colorSelectionMap[coordIndex].splice(
       this.colorSelectionMap[coordIndex].indexOf(coord),
@@ -286,7 +299,6 @@ export class ColorGeneratorComponent {
 
   private updateColorCoordinates(selectionHashMap: SelectionHashMap) {
     for (const key of Object.keys(selectionHashMap)) {
-      console.log(`color-select-row-${parseInt(key)}`);
       const rowElement = document.getElementById(
         `color-select-row-${parseInt(key)}`
       );
@@ -297,13 +309,8 @@ export class ColorGeneratorComponent {
         if (secondColumnCell) {
           secondColumnCell.textContent = '';
           const coordText = selectionHashMap[key]
-            .map(
-              (x: string) =>
-                this.headerLetters[parseInt(x.split(',')[1])] +
-                (parseInt(x.split(',')[0]) + 1).toString()
-            )
+            .map((x: string) => this.formatCoord(x))
             .join(', ');
-          console.log(`coordText: ${coordText}`);
           if (coordText) {
             this.generateColorCoordinatesList(secondColumnCell, coordText);
           } else {
@@ -324,6 +331,41 @@ export class ColorGeneratorComponent {
   ) {
     secondColumnCell.textContent = coordText;
   }
+
+  paintColorFromHashMap(selectionHashMap: SelectionHashMap): void {
+    this.clearGridColor();
+    Object.keys(selectionHashMap).forEach((key) => {
+      const rowElement = document.getElementById(
+        `color-select-row-${parseInt(key)}`
+      );
+      if (!rowElement) return;
+
+      const secondColumnCell = rowElement.querySelector(
+        `td:nth-child(2)`
+      ) as HTMLElement;
+      const firstColumnCell = rowElement.querySelector(
+        `td:nth-child(1)`
+      ) as HTMLElement;
+
+      if (!secondColumnCell || !firstColumnCell) return;
+
+      const columnColor = (
+        firstColumnCell.children[0].children[1].children[1] as HTMLElement
+      ).style.backgroundColor;
+
+      console.log(
+        `Painting: ${secondColumnCell.textContent} with color: ${columnColor}`
+      );
+
+      secondColumnCell.textContent?.split(',').forEach((coordinate) => {
+        const cellElement = document.getElementById(coordinate.trim());
+        if (cellElement) {
+          cellElement.style.backgroundColor = columnColor;
+        }
+      });
+    });
+  }
+  clearGridColor() {}
 }
 interface SelectionHashMap {
   [rowId: string]: Array<string>;
