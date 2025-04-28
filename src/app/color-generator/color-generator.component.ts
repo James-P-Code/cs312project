@@ -3,18 +3,19 @@ import {
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener,
 } from '@angular/core';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HostListener } from '@angular/core';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
 import { HttpParams } from '@angular/common/http';
+import { find, first, map } from 'rxjs';
 
-type ColorFromDatabase = { id: number, name: string, hex_value: string };
+type ColorFromDatabase = { id: number; name: string; hex_value: string };
 
 @Component({
   selector: 'app-color-generator',
@@ -24,7 +25,6 @@ type ColorFromDatabase = { id: number, name: string, hex_value: string };
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
 })
-
 export class ColorGeneratorComponent {
   @Input() rows: number = 0;
   @Input() columns: number = 0;
@@ -35,7 +35,7 @@ export class ColorGeneratorComponent {
   public headerLetters: string[] = [];
   public isTableVisible = false;
 
-  public colorOptions: { label: string; value: string }[] =[];
+  public colorOptions: { label: string; value: string }[] = [];
 
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
@@ -62,7 +62,7 @@ export class ColorGeneratorComponent {
     this.headerLetters = Array.from({ length: this.columns }, (_, i) =>
       this.convertHeaderNumberToLetters(i)
     );
-    
+
     this.getColorsFromDatabase();
 
     const previousColorCount = this.colorSelections.length;
@@ -110,23 +110,25 @@ export class ColorGeneratorComponent {
   }
 
   private getColorsFromDatabase(): void {
-    let httpParams = new HttpParams({ fromObject: {param: "colors"} })
-    this.database.getRequest<ColorFromDatabase[]>(httpParams).subscribe((colors) => {
-      this.setColorOptions(colors);
-    })
+    let httpParams = new HttpParams({ fromObject: { param: 'colors' } });
+    this.database
+      .getRequest<ColorFromDatabase[]>(httpParams)
+      .subscribe((colors) => {
+        this.setColorOptions(colors);
+      });
   }
 
   private setColorOptions(colors: ColorFromDatabase[]) {
     this.colorOptions = colors.map((color) => ({
       label: color.name,
-      value: color.hex_value
+      value: color.hex_value,
     }));
 
     this.colorSelections = Array.from(
       { length: this.colors },
       (_, i) => this.colorOptions[i % this.colorOptions.length].value
     );
-    
+
     this.onColorChange();
   }
 
@@ -154,32 +156,44 @@ export class ColorGeneratorComponent {
 
   checkColorContrast(backgroundColor: string, isDisabled: boolean): string {
     // adjusts the color dropdown selection text based on disabled state and background color
-    let textColor = "";
+    let textColor = '';
 
     // set the initial text color
-    if (isDisabled) { // light grey if selection option is disabled
-      textColor = "#D3D3D3";
-    } else { // otherwise set the initial color based on the background
-      let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
+    if (isDisabled) {
+      // light grey if selection option is disabled
+      textColor = '#D3D3D3';
+    } else {
+      // otherwise set the initial color based on the background
+      let backgroundLuminescence =
+        ContrastChecker.relativeLuminescence(backgroundColor);
       const lumiescenceThreshold = 0.179;
-      textColor = backgroundLuminescence > lumiescenceThreshold ? "#000000" : "#FFFFFF";
+      textColor =
+        backgroundLuminescence > lumiescenceThreshold ? '#000000' : '#FFFFFF';
     }
 
     // check the contrast of the initial text color vs the background
-    let contrastValue = ContrastChecker.constrastRatio(textColor, backgroundColor);
+    let contrastValue = ContrastChecker.constrastRatio(
+      textColor,
+      backgroundColor
+    );
     const minimumContrast = 4.5;
 
     if (contrastValue < minimumContrast) {
-      textColor = "#000000";
+      textColor = '#000000';
     }
+
+    this.paintColorFromHashMap(this.colorSelectionMap);
 
     return textColor;
   }
 
   private setDropDownTextColor(backgroundColor: string) {
-    let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
+    let backgroundLuminescence =
+      ContrastChecker.relativeLuminescence(backgroundColor);
     const lumiescenceThreshold = 0.179;
-    return backgroundLuminescence > lumiescenceThreshold ? "#000000" : "#FFFFFF";
+    return backgroundLuminescence > lumiescenceThreshold
+      ? '#000000'
+      : '#FFFFFF';
   }
 
   public printPage() {
@@ -211,6 +225,9 @@ export class ColorGeneratorComponent {
   }
 
   revealedCoordinates = new Set<string>();
+
+  colorSelectionMap: SelectionHashMap = {};
+
   onCellClick(row: number, col: number) {
     const coord = `${row},${col}`;
     if (this.revealedCoordinates.has(coord)) {
@@ -218,9 +235,138 @@ export class ColorGeneratorComponent {
     } else {
       this.revealedCoordinates.add(coord);
     }
+
+    if (!this.colorSelectionMap[this.selectedRowIndex!]) {
+      this.colorSelectionMap[this.selectedRowIndex!] = [];
+    }
+
+    if (!this.isCoordinateInHashMap(coord)) {
+      if (
+        this.colorSelectionMap[this.selectedRowIndex!].indexOf(coord) === -1
+      ) {
+        this.colorSelectionMap[this.selectedRowIndex!].push(coord);
+      }
+    } else {
+      this.removeCoordinateFromList(coord);
+    }
+
+    this.updateColorCoordinates(this.colorSelectionMap);
+    this.paintColorFromHashMap(this.colorSelectionMap);
+  }
+
+  public isCoordinateInHashMap(coord: string): boolean {
+    for (const key of Object.keys(this.colorSelectionMap)) {
+      const coordIndex = this.colorSelectionMap[key].indexOf(coord);
+      if (coordIndex !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public findColorCoordinateIndex(coord: string): number {
+    for (const key of Object.keys(this.colorSelectionMap)) {
+      const coordIndex = this.colorSelectionMap[key].indexOf(coord);
+      if (coordIndex !== -1) {
+        return parseInt(key);
+      }
+    }
+    return -1;
+  }
+
+  public formatCoord(coord: string): string {
+    return (
+      this.headerLetters[parseInt(coord.split(',')[1])] +
+      (parseInt(coord.split(',')[0]) + 1).toString()
+    );
+  }
+
+  public removeCoordinateFromList(coord: string | null) {
+    if (coord === null) return;
+    console.log(`Removing coordinate from list: ${this.formatCoord(coord)} `);
+    const coordCell = document.getElementById(
+      this.formatCoord(coord)
+    ) as HTMLElement;
+    if (coordCell) {
+      coordCell.style.backgroundColor = 'white';
+    }
+    let coordIndex = this.findColorCoordinateIndex(coord);
+    this.colorSelectionMap[coordIndex].splice(
+      this.colorSelectionMap[coordIndex].indexOf(coord),
+      1
+    );
+  }
+
+  private updateColorCoordinates(selectionHashMap: SelectionHashMap) {
+    for (const key of Object.keys(selectionHashMap)) {
+      const rowElement = document.getElementById(
+        `color-select-row-${parseInt(key)}`
+      );
+      if (rowElement) {
+        const secondColumnCell = rowElement.querySelector(
+          `td:nth-child(2)`
+        ) as HTMLElement;
+        if (secondColumnCell) {
+          secondColumnCell.textContent = '';
+          const coordText = selectionHashMap[key]
+            .map((x: string) => this.formatCoord(x))
+            .join(', ');
+          if (coordText) {
+            this.generateColorCoordinatesList(secondColumnCell, coordText);
+          } else {
+            secondColumnCell.textContent = '';
+          }
+        }
+      }
+    }
   }
 
   isRevealed(row: number, col: number): boolean {
     return this.revealedCoordinates.has(`${row},${col}`);
   }
+
+  generateColorCoordinatesList(
+    secondColumnCell: HTMLElement,
+    coordText: string
+  ) {
+    secondColumnCell.textContent = coordText;
+  }
+
+  paintColorFromHashMap(selectionHashMap: SelectionHashMap): void {
+    this.clearGridColor();
+    Object.keys(selectionHashMap).forEach((key) => {
+      const rowElement = document.getElementById(
+        `color-select-row-${parseInt(key)}`
+      );
+      if (!rowElement) return;
+
+      const secondColumnCell = rowElement.querySelector(
+        `td:nth-child(2)`
+      ) as HTMLElement;
+      const firstColumnCell = rowElement.querySelector(
+        `td:nth-child(1)`
+      ) as HTMLElement;
+
+      if (!secondColumnCell || !firstColumnCell) return;
+
+      const columnColor = (
+        firstColumnCell.children[0].children[1].children[1] as HTMLElement
+      ).style.backgroundColor;
+
+      console.log(
+        `Painting: ${secondColumnCell.textContent} with color: ${columnColor}`
+      );
+
+      secondColumnCell.textContent?.split(',').forEach((coordinate) => {
+        const cellElement = document.getElementById(coordinate.trim());
+        if (cellElement) {
+          cellElement.style.backgroundColor = columnColor;
+        }
+      });
+    });
+  }
+  clearGridColor() {}
+}
+interface SelectionHashMap {
+  [rowId: string]: Array<string>;
 }
