@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Database } from '../../api/database';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit-color',
@@ -12,7 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class EditColorComponent implements OnInit {
 
   public editColorForm!: FormGroup;
-  public allColors: Map<string, string> = new Map();
+  public allColors: Map<string, { id: number; hex: string }> = new Map();
 
   public editSuccess = false;
   public editFailure = false;
@@ -20,6 +20,7 @@ export class EditColorComponent implements OnInit {
 
   private originalHex = '';
   private originalName = '';
+  private originalId = -1;
 
   constructor(private database: Database) {}
 
@@ -32,56 +33,77 @@ export class EditColorComponent implements OnInit {
     });
 
     this.editColorForm.get('colorName')?.valueChanges.subscribe(name => {
-	  name = name.trim();
-      if (this.allColors.has(name)) {
-        const hex = this.allColors.get(name)!;
-		this.editColorForm.get('colorValue')?.setValue(hex);
-        this.originalHex = hex;
-		this.originalName = name;
-      }	else {
-		this.originalHex = '#e26daa';
-		this.originalName = '';
-	  }
+      name = name.trim();
+      const data = this.allColors.get(name);
+      if (data) {
+        this.editColorForm.get('colorValue')?.setValue(data.hex);
+        this.originalHex = data.hex;
+        this.originalName = name;
+        this.originalId = data.id;
+      } else {
+        this.originalHex = '#e26daa';
+        this.originalName = '';
+        this.originalId = -1;
+      }
     });
   }
 
   public loadColors(): void {
-    const params = new URLSearchParams();
-    params.set('action', 'colors');
-
-    this.database.getRequest<{ name: string, hex: string }[]>(params as any).subscribe({
+    const params = new HttpParams().set('param', 'colors');
+  
+    this.database.getRequest<{ id: number, name: string, hex_value: string }[]>(params).subscribe({
       next: (colors) => {
-        colors.forEach(c => this.allColors.set(c.name, c.hex));
+        this.allColors.clear();
+        colors.forEach(c => this.allColors.set(c.name, { id: c.id, hex: c.hex_value }));
       },
       error: (err) => console.error('Error fetching colors', err)
     });
   }
+  
 
   public onEditColorSubmit(): void {
     this.editSuccess = false;
     this.editFailure = false;
     this.noChanges = false;
-
+  
     const name = this.editColorForm.value.colorName.trim();
     const newHex = this.editColorForm.value.colorValue.trim();
-
-    if (!name || !newHex || this.originalHex === newHex) {
+  
+    if (!name || !newHex) return;
+  
+    if (name === this.originalName && newHex === this.originalHex) {
       this.noChanges = true;
       return;
     }
-
+  
+    // const nameConflict = [...this.allColors.entries()].some(([otherName, data]) =>
+    //   name === otherName
+    // );
+    
+    // const hexConflict = [...this.allColors.entries()].some(([_, data]) =>
+    //   data.hex.toLowerCase() === newHex.toLowerCase() && data.id !== this.originalId
+    // );    
+    
+    // if (nameConflict || hexConflict) {
+    //   this.editFailure = true;
+    //   return;
+    // }
+  
+    const colorId = this.originalId;
+  
     const postParams = new Map<string, string>([
       ['colorName', name],
-      ['colorValue', newHex]
+      ['colorValue', newHex],
+      ['id', String(colorId)]
     ]);
-
+  
     this.database.postRequest("edit", postParams).subscribe({
       next: (statusCode) => {
         if (statusCode === 200) {
           this.editSuccess = true;
-          this.allColors.set(name, newHex);
+          this.allColors.set(name, { id: colorId, hex: newHex });
           this.originalHex = newHex;
-		  this.originalName = name;
+          this.originalName = name;
         } else {
           this.editFailure = true;
         }
@@ -92,4 +114,5 @@ export class EditColorComponent implements OnInit {
       }
     });
   }
+  
 }
