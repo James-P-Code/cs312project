@@ -45,7 +45,7 @@ export class AddColorComponent {
 
     const successCode = 201;
 
-    let postParams = new Map<string, string>([
+    let postParams = new Map<string, any>([
         ["colorName", String(this.addColorForm.value.colorName)],
         ["colorValue", String(this.addColorForm.value.colorValue)]
     ]);
