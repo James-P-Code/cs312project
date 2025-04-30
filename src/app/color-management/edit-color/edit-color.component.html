@@ -1,0 +1,31 @@
+<div class="form-container">
+	<div class="form-text">
+	  <h1>Edit Color</h1>
+	  <hr />
+
+	  <form [formGroup]="editColorForm" (ngSubmit)="onEditColorSubmit()">
+		<p>
+		  Color Name:
+		  <input type="text" formControlName="colorName" name="colorName" (focus)="loadColors()" />
+		</p>
+  
+		<p>
+		  Color Value:
+		  <input type="color" formControlName="colorValue" name="colorValue" />
+		</p>
+  
+		<div class="submit-button-container">
+		  <button type="submit" class="btn-19" [disabled]="editColorForm.invalid">Submit</button>
+  
+		  @if (editSuccess) {
+			<span class="success-box" aria-live="polite">Color updated!</span>
+		  } @else if (editFailure) {
+			<span class="error-box" aria-live="polite">A color with that name or color value already exists!</span>
+		  } @else if (noChanges) {
+			<span class="error-box" aria-live="polite">No changes made to the color.</span>
+		  }
+		</div>
+	  </form>
+	</div>
+  </div>
+  
