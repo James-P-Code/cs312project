@@ -21,8 +21,12 @@ export class AddColorComponent {
 
   private initializeAddColorForm() {
     this.addColorForm = new FormGroup({
-      colorName: new FormControl('', [Validators.required, Validators.pattern('.*\\S.*')]),
-      colorValue: new FormControl('#e26daa')});
+      colorName: new FormControl('', [
+        Validators.required, 
+        Validators.pattern('.*\\S.*')]),
+      colorValue: new FormControl('#e26daa', [
+        Validators.required // grace - validators required
+      ])});
   }
 
   get addColorFormColorName() {
@@ -33,7 +37,12 @@ export class AddColorComponent {
     return this.addColorForm.get('colorValue');
   }
 
-  public onAddColorSubmit() {
+  public onAddColorSubmit(): void { // grace - void
+    this.addColorSuccess = false; // grace - added these next few lines
+    this.addColorFailure = false;
+
+    if (this.addColorForm.invalid) return;
+
     const successCode = 201;
 
     let postParams = new Map<string, string>([
@@ -41,10 +50,16 @@ export class AddColorComponent {
         ["colorValue", String(this.addColorForm.value.colorValue)]
     ]);
 
-    this.database.postRequest("add", postParams).subscribe({
+    this.database.postRequest("add", postParams).subscribe({ // grace - changed this section
       next: responseCode => {
-        console.log("Response code: " + responseCode);
-        responseCode == successCode ? this.addColorSuccess = true : this.addColorFailure = true;
+        if (responseCode == successCode) {
+          this.addColorSuccess = true;
+          this.addColorForm.reset({ colorValue: '#e26daa' });
+        } else {
+          this.addColorFailure = true;
+        }
+        // console.log("Response code: " + responseCode);
+        // responseCode == successCode ? this.addColorSuccess = true : this.addColorFailure = true;
       },
       error: (errorResponse: HttpErrorResponse) => {
         console.log("Error: " + errorResponse.message);
