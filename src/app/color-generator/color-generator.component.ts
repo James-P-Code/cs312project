@@ -198,6 +198,7 @@ export class ColorGeneratorComponent {
 
   public printPage() {
     this.isPrinting = true;
+    this.paintColorFromHashMap(this.colorSelectionMap);
 
     setTimeout(() => {
       window.print();
@@ -217,6 +218,7 @@ export class ColorGeneratorComponent {
   @HostListener('window:beforeprint', [])
   onBeforePrint() {
     this.isPrinting = true;
+    this.paintColorFromHashMap(this.colorSelectionMap);
   }
 
   @HostListener('window:afterprint', [])
@@ -284,12 +286,10 @@ export class ColorGeneratorComponent {
   public removeCoordinateFromList(coord: string | null) {
     if (coord === null) return;
     console.log(`Removing coordinate from list: ${this.formatCoord(coord)} `);
-    const coordCell = document.getElementById(
-      this.formatCoord(coord)
-    ) as HTMLElement;
-    if (coordCell) {
-      coordCell.style.backgroundColor = 'white';
-    }
+    const elements = document.getElementsByClassName(this.formatCoord(coord));
+    Array.from(elements).forEach((element) => {
+      (element as HTMLElement).style.backgroundColor = 'white';
+    });
     let coordIndex = this.findColorCoordinateIndex(coord);
     this.colorSelectionMap[coordIndex].splice(
       this.colorSelectionMap[coordIndex].indexOf(coord),
@@ -358,10 +358,11 @@ export class ColorGeneratorComponent {
       );
 
       secondColumnCell.textContent?.split(',').forEach((coordinate) => {
-        const cellElement = document.getElementById(coordinate.trim());
-        if (cellElement) {
-          cellElement.style.backgroundColor = columnColor;
-        }
+        Array.from(document.getElementsByClassName(coordinate.trim())).forEach(
+          (element) => {
+            (element as HTMLElement).style.backgroundColor = columnColor;
+          }
+        );
       });
     });
   }

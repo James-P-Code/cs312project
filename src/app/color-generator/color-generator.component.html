@@ -44,8 +44,8 @@
 
 <div class="table-container">
   <div class="table-wrapper">
-    @if (isPrinting) { <!-- Printable Table -->
-    <table id="coordinate-table" class="{{ printScaleClass }} print-only">
+    <!-- @if (isPrinting) {  Printable Table -->
+    <table id="coordinate-table-printable" class="{{ printScaleClass }} print-only">
       <tr class="sticky-header">
         <th></th>
         @for (columns of columnIndices; track $index) {
@@ -56,7 +56,7 @@
       <tr>
         <th>{{ rowNumber + 1 }}</th>
         @for (column of columnIndices; track $index; let columnNumber = $index) {
-        <td>
+        <td class="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
           @if (isRevealed(rowNumber, columnNumber)) {
           {{ headerLetters[columnNumber] + (rowNumber + 1) }}
           }
@@ -65,7 +65,7 @@
       </tr>
       }
     </table>
-    }
+    <!-- } -->
     @if (!isPrinting) { <!-- Visible Table -->
     <cdk-virtual-scroll-viewport itemSize="20" minBufferPx="1200" maxBufferPx="1800" appendOnly
       class="example-viewport screen-only">
@@ -80,7 +80,8 @@
         <tr>
           <th>{{ rowNumber + 1 }}</th>
           @for (column of columnIndices; track $index; let columnNumber = $index) {
-          <td (click)="onCellClick(rowNumber, columnNumber)" id="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
+          <td (click)="onCellClick(rowNumber, columnNumber)"
+            class="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
             <span [class.hidden]="!isRevealed(rowNumber, columnNumber)">
               {{ headerLetters[columnNumber] + (rowNumber + 1) }}
             </span>
