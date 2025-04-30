@@ -13,7 +13,7 @@ export class Database {
     return this.http.get<T>(this.apiURL, { params });
   }
 
-  public postRequest(action: string, postParams: Map<string, string>) {
+  public postRequest(action: string, postParams: Map<string, any>) {
     const params = { action, ...Object.fromEntries(postParams) };
 
     return this.http
