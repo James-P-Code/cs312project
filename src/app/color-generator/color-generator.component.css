@@ -163,10 +163,11 @@ th {
 }
 
 .table-one {
-  width: 100%;
+  width: auto;
   max-width: 1000px;
   min-width: 700px;
   table-layout: fixed;
+  border-collapse: collapse;
 }
 
 .table-one tr {
@@ -177,6 +178,7 @@ th {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .radio-input {
@@ -224,6 +226,28 @@ option:disabled {
 
 .table-one td:first-child {
   vertical-align: middle;
+  width: 20%;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.table-one td,
+.table-one th {
+  border: 1px solid black;
+  padding: 0;
+}
+
+.table-one td:nth-child(2) {
+  width: 80%;
+}
+
+.table-one td:nth-child(2) .color-select-row {
+  min-height: 2rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* .table-one td {
