@@ -18,6 +18,7 @@ export class DeleteColorComponent implements OnInit {
   public deleteSuccess: boolean = false;
   public deleteFailure: boolean = false;
   public notEnoughColors: boolean = false;
+  public confirmDeleteError: boolean = false;
 
   public allColors: Map<string, { id: number; hex: string }> = new Map();
   public allColorsArray: { name: string; id: number; hex: string }[] = [];
@@ -33,7 +34,7 @@ export class DeleteColorComponent implements OnInit {
   private initializeDeleteColorForm(): void {
     this.deleteColorForm = this.fb.group({
       selectedColor: ['', Validators.required],
-      confirmDelete: [false, Validators.requiredTrue]
+      confirmDeleteError: [false, Validators.requiredTrue]
     });
   }
 
@@ -71,6 +72,11 @@ export class DeleteColorComponent implements OnInit {
 
   public onDeleteColorSubmit(): void {
     this.resetFlags();
+
+	if (!this.deleteColorForm.value.confirmDelete) {
+		this.confirmDeleteError = true;
+		return;
+	}
 
     if (this.allColorsArray.length <= 2) {
       this.notEnoughColors = true;
@@ -118,6 +124,7 @@ export class DeleteColorComponent implements OnInit {
     this.deleteSuccess = false;
     this.deleteFailure = false;
     this.notEnoughColors = false;
+	this.confirmDeleteError = false;
   }
 
   public getTextColorForBackground(hex: string): string {

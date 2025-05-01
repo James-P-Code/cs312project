@@ -26,13 +26,15 @@
 		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" />
 		  <label for="confirmDelete">I confirm that I want to delete this color.</label>
 		</p>
-  
+
 		<div class="submit-button-container">
-		  <button type="submit" class="btn-19" [disabled]="deleteColorForm.invalid">Delete</button>
+		  <button type="submit" class="btn-19">Delete</button>
   
 		  <span *ngIf="deleteSuccess" class="success-box" aria-live="polite">Color deleted successfully!</span>
 		  <span *ngIf="deleteFailure" class="error-box" aria-live="polite">Failed to delete color.</span>
 		  <span *ngIf="notEnoughColors" class="error-box" aria-live="polite">Cannot delete when fewer than 3 colors exist.</span>
+		  <span *ngIf="confirmDeleteError" class="error-box" aria-live="polite">You must confirm deletion by checking the box.</span>
+		  
 		</div>
 	  </form>
 	</div>
