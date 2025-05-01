@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Database } from '../../api/database';
+import { NgIf, NgFor, NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 
 type ColorFromDatabase = { id: number; name: string; hex_value: string };
 
 @Component({
   selector: 'app-edit-color',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgStyle],
   templateUrl: './edit-color.component.html',
   styleUrls: ['./edit-color.component.css']
 })
@@ -18,7 +19,7 @@ export class EditColorComponent implements OnInit {
     colorName: new FormControl('', [
       Validators.required, 
       Validators.pattern('.*\\S.*')]), // for a string of blank spaces            
-    colorValue: new FormControl('#000000')        
+    colorValue: new FormControl('#e26daa')        
   });   
 
   public allColorsFromDatabase: Array<ColorFromDatabase> = [];
@@ -37,8 +38,12 @@ export class EditColorComponent implements OnInit {
         this.colorName.setValue(color.name);
         this.colorValue.setValue(color.hex_value);
         this.editColorForm.markAsPristine();
+      } else {
+        this.colorName.setValue('');
+        this.colorValue.setValue('#e26daa');
       }
     });
+    
   }
 
   public loadColors(): void {
@@ -47,10 +52,10 @@ export class EditColorComponent implements OnInit {
     this.database.getRequest<ColorFromDatabase[]>(params).subscribe({
       next: (colors) => {
         this.allColorsFromDatabase = colors;
-        const initialSelection = this.allColorsFromDatabase[0];
-        this.selectedId.setValue(initialSelection.id); 
-        this.colorName.setValue(initialSelection.name);
-        this.colorValue.setValue(initialSelection.hex_value);
+        // const initialSelection = this.allColorsFromDatabase[0];
+        // this.selectedId.setValue(initialSelection.id); 
+        // this.colorName.setValue(initialSelection.name);
+        // this.colorValue.setValue(initialSelection.hex_value);
       },
       error: (err) => console.error('Error fetching colors', err)
     });
@@ -67,7 +72,6 @@ export class EditColorComponent implements OnInit {
   get colorValue() {
     return this.editColorForm.get('colorValue') as FormControl;
   }
-
 
   public onEditColorSubmit(): void {
     this.editSuccess = false;
@@ -90,4 +94,20 @@ export class EditColorComponent implements OnInit {
       }
     });
   }
+
+  public getSelectedHex(): string {
+    const selectedId = this.selectedId?.value;
+    const match = this.allColorsFromDatabase.find(c => c.id === selectedId);
+    return match?.hex_value ?? '#ffffff';
+  }
+  
+  public getTextColorForBackground(hex: string): string {
+    if (!hex || hex.length !== 7) return '#000000';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? '#000000' : '#FFFFFF';
+  }
+  
 }

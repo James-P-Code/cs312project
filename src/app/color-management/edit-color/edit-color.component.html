@@ -6,11 +6,20 @@
 	  <form [formGroup]="editColorForm" (ngSubmit)="onEditColorSubmit()">
 		<p>
 			Select Color To Edit:
-			<select [formControl]="selectedId">
-			  @for (color of allColorsFromDatabase; track color.id) {
-				<option [ngValue]="color.id">{{ color.name }}</option>
-			  }
+			<select
+				[formControl]="selectedId"
+				class="color-dropdown"
+				[ngStyle]="{
+					'background-color': getSelectedHex(),
+					'color': getTextColorForBackground(getSelectedHex())
+				}"
+				>
+				<option value="" disabled selected>Select a color</option>
+				@for (color of allColorsFromDatabase; track color.id) {
+					<option [ngValue]="color.id">{{ color.name }}</option>
+				}
 			</select>
+
 		  </p>
 		  
 		  <p>
