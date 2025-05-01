@@ -20,14 +20,11 @@ export class EditColorComponent implements OnInit {
       Validators.pattern('.*\\S.*')]), // for a string of blank spaces            
     colorValue: new FormControl('#000000')        
   });   
-  public allColorsFromDatabase: Array<ColorFromDatabase> = [];
 
+  public allColorsFromDatabase: Array<ColorFromDatabase> = [];
   public editSuccess = false;
   public isDuplicateName = false;
   public isDuplicateHexValue = false;
-
-  public selectedColorName = '';
-  public selectedColorHexValue = '';
 
   constructor(private database: Database) {}
 
@@ -89,7 +86,7 @@ export class EditColorComponent implements OnInit {
       error: (response: HttpErrorResponse) => {
         this.isDuplicateName = response.error.message.includes("unique_name");
         this.isDuplicateHexValue = response.error.message.includes("unique_hex_value");
-        console.error("Edit error", response.error.message);
+        console.log("Edit error", response.error.message);
       }
     });
   }
