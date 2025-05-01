@@ -170,7 +170,7 @@ th {
 }
 
 .table-one tr {
-  height: 2rem; /* or use `padding` on td if you want more control */
+  height: 2rem;
 }
 
 .color-select-row {
@@ -226,9 +226,9 @@ option:disabled {
   vertical-align: middle;
 }
 
-.table-one td {
+/* .table-one td {
   color: black;
-}
+} */
 
 .example-viewport {
   height: 800px;
@@ -252,6 +252,7 @@ option:disabled {
 
 .print-button-container {
   margin: 0 0 3rem 1rem;
+  display: block;
 }
 
 hr {
@@ -271,4 +272,8 @@ hr {
   width: 35px;
   height: auto;
   z-index: 9999;
+}
+
+.after-print-button-spacer {
+  height: 0.1rem;
 }

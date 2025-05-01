@@ -132,3 +132,7 @@ button:disabled:hover {
   background-color: #f0f0f0;
   border-color: #dcdcdc;
 }
+
+.delete-color-box {
+  margin-bottom: 3rem;
+}
