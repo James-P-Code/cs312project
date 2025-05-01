@@ -3,6 +3,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Database } from '../../api/database';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 
+type ColorFromDatabase = { id: number; name: string; hex_value: string };
+
 @Component({
   selector: 'app-edit-color',
   imports: [ReactiveFormsModule],
@@ -11,39 +13,33 @@ import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 })
 export class EditColorComponent implements OnInit {
 
-  public editColorForm!: FormGroup;
-  public allColors: Map<string, { id: number; hex: string }> = new Map();
+  public editColorForm = new FormGroup({
+    selectedId: new FormControl(),    
+    colorName: new FormControl('', [
+      Validators.required, 
+      Validators.pattern('.*\\S.*')]), // for a string of blank spaces            
+    colorValue: new FormControl('#000000')        
+  });   
+  public allColorsFromDatabase: Array<ColorFromDatabase> = [];
 
   public editSuccess = false;
-  public editFailure = false;
-  public noChanges = false;
+  public isDuplicateName = false;
+  public isDuplicateHexValue = false;
 
-  private originalHex = '';
-  private originalName = '';
-  private originalId = -1;
+  public selectedColorName = '';
+  public selectedColorHexValue = '';
 
   constructor(private database: Database) {}
 
   ngOnInit(): void {
     this.loadColors();
 
-    this.editColorForm = new FormGroup({
-      colorName: new FormControl('', [Validators.required, Validators.pattern('.*\\S.*')]),
-      colorValue: new FormControl('#e26daa', [Validators.required])
-    });
-
-    this.editColorForm.get('colorName')?.valueChanges.subscribe(name => {
-      name = name.trim();
-      const data = this.allColors.get(name);
-      if (data) {
-        this.editColorForm.get('colorValue')?.setValue(data.hex);
-        this.originalHex = data.hex;
-        this.originalName = name;
-        this.originalId = data.id;
-      } else {
-        this.originalHex = '#e26daa';
-        this.originalName = '';
-        this.originalId = -1;
+    this.selectedId.valueChanges.subscribe(id => {
+      const color = this.allColorsFromDatabase.find(c => c.id === id);
+      if (color) {
+        this.colorName.setValue(color.name);
+        this.colorValue.setValue(color.hex_value);
+        this.editColorForm.markAsPristine();
       }
     });
   }
@@ -51,68 +47,50 @@ export class EditColorComponent implements OnInit {
   public loadColors(): void {
     const params = new HttpParams().set('param', 'colors');
   
-    this.database.getRequest<{ id: number, name: string, hex_value: string }[]>(params).subscribe({
+    this.database.getRequest<ColorFromDatabase[]>(params).subscribe({
       next: (colors) => {
-        this.allColors.clear();
-        colors.forEach(c => this.allColors.set(c.name, { id: c.id, hex: c.hex_value }));
+        this.allColorsFromDatabase = colors;
+        const initialSelection = this.allColorsFromDatabase[0];
+        this.selectedId.setValue(initialSelection.id); 
+        this.colorName.setValue(initialSelection.name);
+        this.colorValue.setValue(initialSelection.hex_value);
       },
       error: (err) => console.error('Error fetching colors', err)
     });
   }
-  
+
+  get selectedId() {
+    return this.editColorForm.get('selectedId') as FormControl;
+  }
+
+  get colorName() {
+    return this.editColorForm.get('colorName') as FormControl;
+  }
+
+  get colorValue() {
+    return this.editColorForm.get('colorValue') as FormControl;
+  }
+
 
   public onEditColorSubmit(): void {
     this.editSuccess = false;
-    this.editFailure = false;
-    this.noChanges = false;
   
-    const name = this.editColorForm.value.colorName.trim();
-    const newHex = this.editColorForm.value.colorValue.trim();
-  
-    if (!name || !newHex) return;
-  
-    if (name === this.originalName && newHex === this.originalHex) {
-      this.noChanges = true;
-      return;
-    }
-  
-    // const nameConflict = [...this.allColors.entries()].some(([otherName, data]) =>
-    //   name === otherName
-    // );
-    
-    // const hexConflict = [...this.allColors.entries()].some(([_, data]) =>
-    //   data.hex.toLowerCase() === newHex.toLowerCase() && data.id !== this.originalId
-    // );    
-    
-    // if (nameConflict || hexConflict) {
-    //   this.editFailure = true;
-    //   return;
-    // }
-  
-    const colorId = this.originalId;
-  
-    const postParams = new Map<string, string>([
-      ['colorName', name],
-      ['colorValue', newHex],
-      ['id', String(colorId)]
+    const postParams = new Map<string, any>([
+      ['colorName',  this.colorName.value],
+      ['colorValue', this.colorValue.value],
+      ['id', Number(this.selectedId.value)]
     ]);
-  
+
+    const postSuccess = 201;
     this.database.postRequest("edit", postParams).subscribe({
       next: (statusCode) => {
-        if (statusCode === 200) {
-          this.editSuccess = true;
-          this.allColors.set(name, { id: colorId, hex: newHex });
-          this.originalHex = newHex;
-          this.originalName = name;
-        } else {
-          this.editFailure = true;
-        }
+        this.editSuccess = statusCode === postSuccess;
       },
-      error: (error: HttpErrorResponse) => {
-        console.error("Edit error", error);
-        this.editFailure = true;
+      error: (response: HttpErrorResponse) => {
+        this.isDuplicateName = response.error.message.includes("unique_name");
+        this.isDuplicateHexValue = response.error.message.includes("unique_hex_value");
+        console.error("Edit error", response.error.message);
       }
     });
   }
-  
 }
