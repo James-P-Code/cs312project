@@ -5,24 +5,36 @@
 
 	  <form [formGroup]="editColorForm" (ngSubmit)="onEditColorSubmit()">
 		<p>
-		  Color Name:
-		  <input type="text" formControlName="colorName" name="colorName" (focus)="loadColors()" />
-		</p>
-  
-		<p>
-		  Color Value:
-		  <input type="color" formControlName="colorValue" name="colorValue" />
-		</p>
-  
+			Select Color To Edit:
+			<select [formControl]="selectedId">
+			  @for (color of allColorsFromDatabase; track color.id) {
+				<option [ngValue]="color.id">{{ color.name }}</option>
+			  }
+			</select>
+		  </p>
+		  
+		  <p>
+			Color Name:
+			<input type="text" [formControl]="colorName" />
+			@if (colorName.dirty && (colorName.hasError('pattern') || colorName.hasError('required'))) {
+				 <span class="error-box" aria-live="polite">Name cannot be blank!</span>
+			}
+		  </p>
+		  
+		  <p>
+			Color Value:
+			<input type="color" [formControl]="colorValue" />
+		  </p>
+
 		<div class="submit-button-container">
-		  <button type="submit" class="btn-19" [disabled]="editColorForm.invalid">Submit</button>
+		  <button type="submit" [disabled]="editColorForm.pristine || editColorForm.invalid">Submit</button>
   
 		  @if (editSuccess) {
 			<span class="success-box" aria-live="polite">Color updated!</span>
-		  } @else if (editFailure) {
-			<span class="error-box" aria-live="polite">A color with that name does not exist.</span>
-		  } @else if (noChanges) {
-			<span class="error-box" aria-live="polite">No changes made to the color.</span>
+		  } @else if (isDuplicateName) {
+			<span class="error-box" aria-live="polite">A color with that name already exists!</span>
+		  } @else if (isDuplicateHexValue) {
+			<span class="error-box" aria-live="polite">A color with that color value already exists!</span>
 		  }
 		</div>
 	  </form>
