@@ -33,7 +33,7 @@
 		  <span *ngIf="deleteSuccess" class="success-box" aria-live="polite">Color deleted successfully!</span>
 		  <span *ngIf="deleteFailure" class="error-box" aria-live="polite">Failed to delete color.</span>
 		  <span *ngIf="notEnoughColors" class="error-box" aria-live="polite">Cannot delete when fewer than 3 colors exist.</span>
-		  <span *ngIf="confirmDeleteError" class="error-box" aria-live="polite">You must confirm deletion by checking the box.</span>
+		  <span *ngIf="confirmDeleteError && !deleteColorForm.get('confirmDelete')?.value" class="error-box" aria-live="polite">You must confirm deletion by checking the box.</span>
 		  
 		</div>
 	  </form>

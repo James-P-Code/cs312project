@@ -34,7 +34,7 @@ export class DeleteColorComponent implements OnInit {
   private initializeDeleteColorForm(): void {
     this.deleteColorForm = this.fb.group({
       selectedColor: ['', Validators.required],
-      confirmDeleteError: [false, Validators.requiredTrue]
+      confirmDelete: [false]
     });
   }
 
@@ -73,10 +73,11 @@ export class DeleteColorComponent implements OnInit {
   public onDeleteColorSubmit(): void {
     this.resetFlags();
 
-	if (!this.deleteColorForm.value.confirmDelete) {
-		this.confirmDeleteError = true;
-		return;
-	}
+	const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
+    if (!confirmed) {
+      this.confirmDeleteError = true;
+      return;
+    }
 
     if (this.allColorsArray.length <= 2) {
       this.notEnoughColors = true;
@@ -114,7 +115,7 @@ export class DeleteColorComponent implements OnInit {
       this.allColorsArray.splice(index, 1);
       this.allColors.delete(nameToRemove);
       this.colorDropdownOptions = this.allColorsArray.map((color) => ({
-        label: `${color.name} (${color.hex})`,
+        label: color.name,
         value: color.id.toString()
       }));
     }
