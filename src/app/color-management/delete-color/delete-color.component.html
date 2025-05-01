@@ -1,0 +1,40 @@
+<div class="form-container">
+	<div class="form-text">
+	  <h1>Delete Color</h1>
+	  <hr />
+
+	  <form [formGroup]="deleteColorForm" (ngSubmit)="onDeleteColorSubmit()">
+		<p>
+		  Select Color:
+		  <select
+				formControlName="selectedColor"
+				name="selectedColor"
+				class="color-dropdown"
+				[ngStyle]="{
+					'background-color': getSelectedHex(),
+					'color': getTextColorForBackground(getSelectedHex())
+				}"
+				>
+				<option value="" disabled selected>Select a color</option>
+				<option *ngFor="let option of colorDropdownOptions" [value]="option.value">
+					{{ option.label }}
+				</option>
+			</select>
+		</p>
+  
+		<p>
+		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" />
+		  <label for="confirmDelete">I confirm that I want to delete this color.</label>
+		</p>
+  
+		<div class="submit-button-container">
+		  <button type="submit" class="btn-19" [disabled]="deleteColorForm.invalid">Delete</button>
+  
+		  <span *ngIf="deleteSuccess" class="success-box" aria-live="polite">Color deleted successfully!</span>
+		  <span *ngIf="deleteFailure" class="error-box" aria-live="polite">Failed to delete color.</span>
+		  <span *ngIf="notEnoughColors" class="error-box" aria-live="polite">Cannot delete when fewer than 3 colors exist.</span>
+		</div>
+	  </form>
+	</div>
+  </div>
+  
