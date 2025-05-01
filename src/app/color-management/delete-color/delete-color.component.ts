@@ -18,7 +18,7 @@ export class DeleteColorComponent implements OnInit {
   public deleteSuccess: boolean = false;
   public deleteFailure: boolean = false;
   public notEnoughColors: boolean = false;
-  public confirmDeleteError: boolean = false;
+  // public confirmDeleteError: boolean = false;
 
   public allColors: Map<string, { id: number; hex: string }> = new Map();
   public allColorsArray: { name: string; id: number; hex: string }[] = [];
@@ -73,11 +73,11 @@ export class DeleteColorComponent implements OnInit {
   public onDeleteColorSubmit(): void {
     this.resetFlags();
 
-	const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
-    if (!confirmed) {
-      this.confirmDeleteError = true;
-      return;
-    }
+	// const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
+  //   if (!confirmed) {
+  //     this.confirmDeleteError = true;
+  //     return;
+  //   }
 
     if (this.allColorsArray.length <= 2) {
       this.notEnoughColors = true;
@@ -125,7 +125,7 @@ export class DeleteColorComponent implements OnInit {
     this.deleteSuccess = false;
     this.deleteFailure = false;
     this.notEnoughColors = false;
-	this.confirmDeleteError = false;
+	// this.confirmDeleteError = false;
   }
 
   public getTextColorForBackground(hex: string): string {
