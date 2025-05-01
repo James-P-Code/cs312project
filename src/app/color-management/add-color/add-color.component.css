@@ -98,3 +98,17 @@ button:hover {
     background-color: #6d4ae2;
     border-color: #4b1de2;
 }
+
+button:disabled {
+  cursor: not-allowed;
+  color: #b0b0b0;
+  background-color: #f0f0f0;
+  border-color: #dcdcdc;
+}
+
+button:disabled:hover {
+  color: #b0b0b0;
+  background-color: #f0f0f0;
+  border-color: #dcdcdc;
+}
+

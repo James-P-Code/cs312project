@@ -17,7 +17,7 @@
                 <input type="color" formControlName="colorValue" name="colorValue" />
             </p>
             <div class="submit-button-container">
-                <button type="submit" class="btn-19" [disabled]="addColorForm.invalid">Submit</button>
+                <button type="submit" class="btn-19" [disabled]="!addColorForm.get('colorName')?.value?.trim()">Submit</button>
                 @if (addColorSuccess) {
                     <span class="success-box" aria-live="polite">Color added!</span>
                 } @else if (addColorFailure) {
