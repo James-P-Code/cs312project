@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Database } from '../../api/database';
 import { NgStyle } from '@angular/common';
@@ -16,6 +16,7 @@ declare const bootstrap: any;
 })
 export class EditColorComponent {
   @ViewChild('editSuccessToast', { static: true }) successToast!: ElementRef;
+  @Output() colorEdited = new EventEmitter<void>();
 
   ngAfterViewInit() {
     this.toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
@@ -44,7 +45,7 @@ export class EditColorComponent {
     this.initializeEditColorForm();
   }
 
-  private initializeEditColorForm() {
+  public initializeEditColorForm() {
     this.loadColors();
 
     this.selectedId.valueChanges.subscribe(id => {
@@ -120,6 +121,7 @@ export class EditColorComponent {
         this.newColorName = this.colorName.value;
         this.newColorValue = this.colorValue.value;
         this.toast.show();
+        this.colorEdited.emit();
       },
       error: (response: HttpErrorResponse) => {
         this.isDuplicateName = response.error.message.includes("unique_name");

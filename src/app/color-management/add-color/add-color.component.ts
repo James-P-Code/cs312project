@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Database } from '../../api/database';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,6 +13,7 @@ declare const bootstrap: any;
 })
 export class AddColorComponent {
   @ViewChild('successToast', { static: true }) successToast!: ElementRef;
+  @Output() colorAdded = new EventEmitter<void>();
 
   public addColorForm!: FormGroup;
   public addColorSuccess: boolean = false;
@@ -71,6 +72,7 @@ export class AddColorComponent {
           this.addedColorValue = this.addColorForm.value.colorValue;
           const toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
           toast.show();
+          this.colorAdded.emit();
         }
       },
       error: (response: HttpErrorResponse) => {

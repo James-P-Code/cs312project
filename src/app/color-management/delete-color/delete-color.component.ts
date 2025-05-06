@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, NgFor, NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
@@ -15,6 +15,7 @@ declare const bootstrap: any;
 })
 export class DeleteColorComponent implements OnInit {
   @ViewChild('deleteSuccessToast', { static: true }) successToast!: ElementRef;
+  @Output() colorDeleted = new EventEmitter<void>();
 
   ngAfterViewInit() {
     this.toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
@@ -40,7 +41,7 @@ export class DeleteColorComponent implements OnInit {
     this.initializeDeleteColorForm();
   }
 
-  private initializeDeleteColorForm(): void {
+  public initializeDeleteColorForm(): void {
     this.deleteColorForm = this.fb.group({
       selectedColor: ['', Validators.required],
       confirmDelete: [false]
@@ -115,6 +116,7 @@ export class DeleteColorComponent implements OnInit {
           this.deleteSuccess = true;
           this.removeColorById(selectedId);
           this.toast.show();
+          this.colorDeleted.emit();
         } else {
           this.deleteFailure = true;
         }
