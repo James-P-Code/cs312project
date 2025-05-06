@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Database } from '../../api/database';
 import { NgStyle } from '@angular/common';
@@ -6,6 +6,7 @@ import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { ContrastChecker } from '../../utils/contrast-checker';
 
 type ColorFromDatabase = { id: number; name: string; hex_value: string };
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-edit-color',
@@ -14,6 +15,11 @@ type ColorFromDatabase = { id: number; name: string; hex_value: string };
   styleUrls: ['../color-management.component.css']
 })
 export class EditColorComponent {
+  @ViewChild('editSuccessToast', { static: true }) successToast!: ElementRef;
+
+  ngAfterViewInit() {
+    this.toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
+  }
 
   public editColorForm = new FormGroup({
     selectedId: new FormControl(),    
@@ -28,6 +34,11 @@ export class EditColorComponent {
   public isDuplicateName = false;
   public isDuplicateHexValue = false;
   public isSubmitted = false;
+  public oldColorName: string = '';
+  public oldColorValue: string = '';
+  public newColorName: string = '';
+  public newColorValue: string = '';
+  private toast: any;
 
   constructor(private database: Database) {
     this.initializeEditColorForm();
@@ -41,6 +52,8 @@ export class EditColorComponent {
       if (color) {
         this.colorName.setValue(color.name);
         this.colorValue.setValue(color.hex_value);
+        this.oldColorName = color.name;
+        this.oldColorValue = color.hex_value;
         this.editColorForm.markAsPristine();
       } else {
         this.colorName.setValue('');
@@ -53,6 +66,10 @@ export class EditColorComponent {
     this.isDuplicateName = false;
     this.isDuplicateHexValue = false;
     this.isSubmitted = false;
+    this.oldColorName = this.colorName.value;
+    this.oldColorValue = this.colorValue.value;
+    this.newColorName = '';
+    this.newColorValue = '';
   }
 
   public loadColors(): void {
@@ -79,9 +96,11 @@ export class EditColorComponent {
   }
 
   public reinitializeFormIfNeeded(): void {
-    if (this.editColorForm.dirty && this.isSubmitted) {
+    if (this.isSubmitted && (this.editColorForm.dirty || this.editColorForm.touched)) {
       this.initializeEditColorForm();
     }
+
+    if (this.toast) this.toast.hide();
   }
 
   public onEditColorSubmit(): void {
@@ -98,6 +117,9 @@ export class EditColorComponent {
     this.database.postRequest("edit", postParams).subscribe({
       next: (statusCode) => {
         this.editSuccess = statusCode === postSuccess;
+        this.newColorName = this.colorName.value;
+        this.newColorValue = this.colorValue.value;
+        this.toast.show();
       },
       error: (response: HttpErrorResponse) => {
         this.isDuplicateName = response.error.message.includes("unique_name");
