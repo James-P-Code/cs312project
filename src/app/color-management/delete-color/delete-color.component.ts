@@ -1,24 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, NgFor, NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Database } from '../../api/database';
+
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-delete-color',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgFor, NgStyle],
   templateUrl: './delete-color.component.html',
-  styleUrls: ['./delete-color.component.css']
+  styleUrls: ['../color-management.component.css']
 })
 export class DeleteColorComponent implements OnInit {
+  @ViewChild('deleteSuccessToast', { static: true }) successToast!: ElementRef;
+
+  ngAfterViewInit() {
+    this.toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
+  }
 
   public deleteColorForm!: FormGroup;
 
   public deleteSuccess: boolean = false;
   public deleteFailure: boolean = false;
   public notEnoughColors: boolean = false;
-  // public confirmDeleteError: boolean = false;
+  public deletedColorName: string = '';
+  public deletedColorValue: string = '';
+  public isSubmitted: boolean = false;
+  private toast: any;
 
   public allColors: Map<string, { id: number; hex: string }> = new Map();
   public allColorsArray: { name: string; id: number; hex: string }[] = [];
@@ -28,7 +38,6 @@ export class DeleteColorComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeDeleteColorForm();
-    this.loadColors();
   }
 
   private initializeDeleteColorForm(): void {
@@ -36,6 +45,12 @@ export class DeleteColorComponent implements OnInit {
       selectedColor: ['', Validators.required],
       confirmDelete: [false]
     });
+
+    this.deleteColorForm.markAsPristine();
+    this.deletedColorName = '';
+    this.deletedColorValue = '';
+    this.isSubmitted = false;
+    this.loadColors();
   }
 
   public loadColors(): void {
@@ -72,6 +87,7 @@ export class DeleteColorComponent implements OnInit {
 
   public onDeleteColorSubmit(): void {
     this.resetFlags();
+    this.isSubmitted = true;
 
 	// const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
   //   if (!confirmed) {
@@ -85,6 +101,8 @@ export class DeleteColorComponent implements OnInit {
     }
 
     const selectedId = +this.deleteColorForm.value.selectedColor;
+    this.deletedColorName = this.allColorsArray.find(color => color.id === selectedId)!.name;
+    this.deletedColorValue = this.allColorsArray.find(color => color.id === selectedId)!.hex;
 
     const postParams = new Map<string, any>([
       ['action', 'delete'],
@@ -96,7 +114,7 @@ export class DeleteColorComponent implements OnInit {
         if (statusCode === 201) {
           this.deleteSuccess = true;
           this.removeColorById(selectedId);
-          this.deleteColorForm.reset();
+          this.toast.show();
         } else {
           this.deleteFailure = true;
         }
@@ -135,5 +153,13 @@ export class DeleteColorComponent implements OnInit {
     const b = parseInt(hex.slice(5, 7), 16);
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     return luminance > 0.6 ? '#000000' : '#FFFFFF';
+  }
+
+  public reinitializeFormIfNeeded(): void {
+    if (this.isSubmitted && (this.deleteColorForm.dirty || this.deleteColorForm.touched)) {
+      this.initializeDeleteColorForm();
+    }
+
+    if (this.toast) this.toast.hide();
   }
 }
