@@ -49,8 +49,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        Color with name {{ addedColorName }} and hex value {{ addedColorValue}} successfully added!
-        <br />
+        <strong>Color successfully added!</strong><br />
+        Color Name: <strong>{{ addedColorName }}</strong> <br />
+        Hex Value: <strong>{{ addedColorValue}}</strong> <br />
         Color Preview:
         <input type="color" [value]="addedColorValue" disabled />
       </div>
