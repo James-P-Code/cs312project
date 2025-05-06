@@ -42,7 +42,11 @@
 		  
 		  <p>
 			Color Value:
-			<input type="color" [formControl]="colorValue" />
+			<input 
+				type="color" 
+				[formControl]="colorValue"
+				(click)="reinitializeFormIfNeeded()" 
+			/>
 		  </p>
 
 		<div class="submit-button-container">
@@ -58,5 +62,25 @@
 		</div>
 	  </form>
 	</div>
+  </div>
+
+  <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+    <div #editSuccessToast id="editSuccessToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+      <div class="toast-header">
+        <img src="images/logo-no-text.png" class="rounded me-2 website-icon" alt="...">
+        <strong class="me-auto">GlimmerByte</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <strong>Color successfully edited!</strong> <br />
+		Previous Color Name: <strong>{{ oldColorName }}</strong> <br />
+		Previous Color Hex Value: <strong>{{ oldColorValue }}</strong> <br />
+		Previous Color: <input type="color" [value]="oldColorValue" disabled /> <br />
+		<br />
+		New Color Name: <strong>{{ newColorName }}</strong> <br />
+		New Color Hex Value: <strong>{{ newColorValue }}</strong> <br />
+		New Color Preview: <input type="color" [value]="newColorValue" disabled />
+      </div>
+    </div>
   </div>
   
