@@ -130,3 +130,15 @@ border-color: #dcdcdc;
   background-position: right 0.6rem center;
   background-size: 0.6rem;
 }
+
+.website-icon {
+  align-self: center;
+  padding: 10px;
+  width: 75px;
+  height: auto;
+}
+
+.toast-header {
+  background-color: #9582d4 !important;
+  color: #ffffff;
+}
