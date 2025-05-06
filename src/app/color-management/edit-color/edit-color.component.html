@@ -3,7 +3,7 @@
 	  <h1>Edit Color</h1>
 	  <hr />
 
-	  <form [formGroup]="editColorForm" (ngSubmit)="onEditColorSubmit()">
+	  <form [formGroup]="editColorForm" (ngSubmit)="onEditColorSubmit()" novalidate>
 		<p>
 			Select Color To Edit:
 			<select
@@ -13,6 +13,7 @@
 					'background-color': getSelectedHex(),
 					'color': getTextColorForBackground(getSelectedHex())
 				}"
+				(click)="reinitializeFormIfNeeded()"
 				>
 				<option value="" disabled selected>Select a color</option>
 				@for (color of allColorsFromDatabase; track color.id) {
@@ -22,13 +23,22 @@
 
 		  </p>
 		  
-		  <p>
-			Color Name:
-			<input type="text" [formControl]="colorName" />
-			@if (colorName.dirty && (colorName.hasError('pattern') || colorName.hasError('required'))) {
-				 <span class="error-box" aria-live="polite">Name cannot be blank!</span>
-			}
-		  </p>
+		  <div class="form-floating mb-2">
+				<input 
+					type="text" 
+					class="form-control"
+					placeholder="red" 
+					[formControl]="colorName" 
+					[class.is-invalid]="colorName.invalid && (colorName.touched || colorName.dirty)"
+					[class.is-valid]="false"
+					id="colorName"
+					(click)="reinitializeFormIfNeeded()"
+				/>
+				<label for="colorName">Color Name</label>
+				@if (colorName.dirty && (colorName.hasError('pattern') || colorName.hasError('required'))) {
+					<span class="error-box" aria-live="polite">Name cannot be blank!</span>
+				}
+			</div>
 		  
 		  <p>
 			Color Value:
