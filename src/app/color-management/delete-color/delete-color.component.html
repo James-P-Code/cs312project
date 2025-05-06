@@ -14,7 +14,8 @@
 					'background-color': getSelectedHex(),
 					'color': getTextColorForBackground(getSelectedHex())
 				}"
-				>
+				(click)="reinitializeFormIfNeeded()"
+			>
 				<option value="" disabled selected>Select a color</option>
 				<option *ngFor="let option of colorDropdownOptions" [value]="option.value">
 					{{ option.label }}
@@ -30,7 +31,7 @@
 		<div class="submit-button-container">
 		  <button type="submit" class="btn-19" [disabled]="!deleteColorForm.get('confirmDelete')?.value">Delete</button>
   
-		  <span *ngIf="deleteSuccess" class="success-box" aria-live="polite">Color deleted successfully!</span>
+		  <span *ngIf="isSubmitted && deleteSuccess" class="success-box" aria-live="polite">Color deleted successfully!</span>
 		  <span *ngIf="deleteFailure" class="error-box" aria-live="polite">Failed to delete color.</span>
 		  <span *ngIf="notEnoughColors" class="error-box" aria-live="polite">Cannot delete when fewer than 3 colors exist.</span>
 		  <!-- <span *ngIf="confirmDeleteError && !deleteColorForm.get('confirmDelete')?.value" class="error-box" aria-live="polite">You must confirm deletion by checking the box.</span> -->
@@ -38,5 +39,22 @@
 		</div>
 	  </form>
 	</div>
+  </div>
+
+  <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+    <div #deleteSuccessToast id="deleteSuccessToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="images/logo-no-text.png" class="rounded me-2 website-icon" alt="...">
+        <strong class="me-auto">GlimmerByte</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <strong>Color successfully deleted!</strong><br />
+        Deleted Color Name: <strong>{{ deletedColorName }}</strong> <br />
+        Deleted Hex Value: <strong>{{ deletedColorValue}}</strong> <br />
+        Deleted Color:
+        <input type="color" [value]="deletedColorValue" disabled />
+      </div>
+    </div>
   </div>
   
