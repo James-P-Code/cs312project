@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Database } from '../../api/database';
 import { HttpErrorResponse } from '@angular/common/http';
 
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-add-color',
@@ -11,12 +12,15 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: '../color-management.component.css'
 })
 export class AddColorComponent {
+  @ViewChild('successToast', { static: true }) successToast!: ElementRef;
 
   public addColorForm!: FormGroup;
   public addColorSuccess: boolean = false;
   public isSubmitted: boolean = false;
   public isDuplicateColorName: boolean = false;
   public isDuplicateHexValue: boolean = false;
+  public addedColorName: string = '';
+  public addedColorValue: string = '';
 
   public constructor(private database: Database) {
     this.initializeAddColorForm();
@@ -50,7 +54,6 @@ export class AddColorComponent {
 
   public onAddColorSubmit(): void { // grace - void
     this.isSubmitted = true;
-
     if (this.addColorForm.invalid) return;
 
     let postParams = new Map<string, any>([
@@ -64,6 +67,10 @@ export class AddColorComponent {
       next: responseCode => {
         if (responseCode == successCode) {
           this.addColorSuccess = true;
+          this.addedColorName = this.addColorForm.value.colorName;
+          this.addedColorValue = this.addColorForm.value.colorValue;
+          const toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
+          toast.show();
         }
       },
       error: (response: HttpErrorResponse) => {
