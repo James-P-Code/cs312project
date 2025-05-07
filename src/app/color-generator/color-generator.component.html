@@ -78,7 +78,7 @@
         </tr>
         @for (row of rowIndices; track $index; let rowNumber = $index) {
         <tr>
-          <th>{{ rowNumber + 1 }}</th>
+          <th class="sticky-column">{{ rowNumber + 1 }}</th>
           @for (column of columnIndices; track $index; let columnNumber = $index) {
           <td (click)="onCellClick(rowNumber, columnNumber)"
             class="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">

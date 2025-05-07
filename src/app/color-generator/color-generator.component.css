@@ -47,6 +47,13 @@
     max-width: none !important;
   }
 
+  th,
+  .sticky-header th,
+  .sticky-column {
+    text-align: center;
+    vertical-align: middle;
+  }
+
   body {
     overflow: visible !important;
   }
@@ -116,18 +123,29 @@ table {
 }
 
 td {
+  width: 30px;
+  height: 30px;
   border: 1px solid;
+  text-align: center;
+  vertical-align: middle;
 }
 
 th {
+  width: 30px;
+  height: 30px;
   border: 1px solid;
   background-color: black;
   color: white;
 }
 
-.sticky-header {
+.sticky-header th {
   position: sticky;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
   background-color: black;
+  font-weight: bold;
   top: 0;
   color: white;
   padding: 5px;
@@ -136,8 +154,13 @@ th {
 
 .sticky-column {
   position: sticky;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
   left: 0;
   background-color: black;
+  font-weight: bold;
   color: white;
   z-index: 10;
 }
