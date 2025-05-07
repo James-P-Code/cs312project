@@ -81,7 +81,7 @@ export class DeleteColorComponent implements OnInit {
   }
 
   public getSelectedHex(): string {
-	const selectedId = this.deleteColorForm?.value?.selectedColor;
+	const selectedId = this.deleteColorForm?.value?.selectedId;
 	const match = this.allColorsArray.find(c => c.id.toString() === selectedId);
 	return match?.hex ?? '#ffffff';
 	}
@@ -101,7 +101,7 @@ export class DeleteColorComponent implements OnInit {
       return;
     }
 
-    const selectedId = +this.deleteColorForm.value.selectedColor;
+    const selectedId = +this.deleteColorForm.value.selectedId;
     this.deletedColorName = this.allColorsArray.find(color => color.id === selectedId)!.name;
     this.deletedColorValue = this.allColorsArray.find(color => color.id === selectedId)!.hex;
 
@@ -117,6 +117,7 @@ export class DeleteColorComponent implements OnInit {
           this.removeColorById(selectedId);
           this.toast.show();
           this.colorDeleted.emit();
+          this.deleteColorForm.reset();
         } else {
           this.deleteFailure = true;
         }

@@ -18,9 +18,9 @@
                     <label for="colorName">Color Name</label>
                 </div>
 
-                @if (colorName?.invalid && (colorName?.touched || colorName?.dirty)) {
-                    @if (colorName?.hasError('required')) { <span class="error-box mb-2" aria-live="polite">A Name is Required!</span> }
-                    @if (colorName?.hasError('pattern')) { <span class="error-box mb-2" aria-live="polite">Name cannot be blank!</span> }
+                @if (colorName.invalid && (colorName.touched || colorName.dirty)) {
+                    @if (colorName.hasError('required')) { <span class="error-box mb-2" aria-live="polite">A Name is Required!</span> }
+                    @if (colorName.hasError('pattern')) { <span class="error-box mb-2" aria-live="polite">Name cannot be blank!</span> }
                 }
 
             <p>
