@@ -1,18 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Database } from '../../api/database';
-import { NgIf, NgFor, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { ContrastChecker } from '../../utils/contrast-checker';
 
 type ColorFromDatabase = { id: number; name: string; hex_value: string };
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-edit-color',
   imports: [ReactiveFormsModule, NgStyle],
   templateUrl: './edit-color.component.html',
-  styleUrls: ['./edit-color.component.css']
+  styleUrls: ['../color-management.component.css']
 })
-export class EditColorComponent implements OnInit {
+export class EditColorComponent {
+  @ViewChild('editSuccessToast', { static: true }) successToast!: ElementRef;
+  @Output() colorEdited = new EventEmitter<void>();
+
+  ngAfterViewInit() {
+    this.toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
+  }
 
   public editColorForm = new FormGroup({
     selectedId: new FormControl(),    
@@ -26,10 +34,18 @@ export class EditColorComponent implements OnInit {
   public editSuccess = false;
   public isDuplicateName = false;
   public isDuplicateHexValue = false;
+  public isSubmitted = false;
+  public oldColorName: string = '';
+  public oldColorValue: string = '';
+  public newColorName: string = '';
+  public newColorValue: string = '';
+  private toast: any;
 
-  constructor(private database: Database) {}
+  constructor(private database: Database) {
+    this.initializeEditColorForm();
+  }
 
-  ngOnInit(): void {
+  public initializeEditColorForm() {
     this.loadColors();
 
     this.selectedId.valueChanges.subscribe(id => {
@@ -37,13 +53,24 @@ export class EditColorComponent implements OnInit {
       if (color) {
         this.colorName.setValue(color.name);
         this.colorValue.setValue(color.hex_value);
+        this.oldColorName = color.name;
+        this.oldColorValue = color.hex_value;
         this.editColorForm.markAsPristine();
       } else {
         this.colorName.setValue('');
         this.colorValue.setValue('#e26daa');
       }
     });
-    
+
+    this.editColorForm.markAsPristine();
+    this.editSuccess = false;
+    this.isDuplicateName = false;
+    this.isDuplicateHexValue = false;
+    this.isSubmitted = false;
+    this.oldColorName = this.colorName.value;
+    this.oldColorValue = this.colorValue.value;
+    this.newColorName = '';
+    this.newColorValue = '';
   }
 
   public loadColors(): void {
@@ -52,10 +79,6 @@ export class EditColorComponent implements OnInit {
     this.database.getRequest<ColorFromDatabase[]>(params).subscribe({
       next: (colors) => {
         this.allColorsFromDatabase = colors;
-        // const initialSelection = this.allColorsFromDatabase[0];
-        // this.selectedId.setValue(initialSelection.id); 
-        // this.colorName.setValue(initialSelection.name);
-        // this.colorValue.setValue(initialSelection.hex_value);
       },
       error: (err) => console.error('Error fetching colors', err)
     });
@@ -73,8 +96,17 @@ export class EditColorComponent implements OnInit {
     return this.editColorForm.get('colorValue') as FormControl;
   }
 
+  public reinitializeFormIfNeeded(): void {
+    if (this.isSubmitted && (this.editColorForm.dirty || this.editColorForm.touched)) {
+      this.initializeEditColorForm();
+    }
+
+    if (this.toast) this.toast.hide();
+  }
+
   public onEditColorSubmit(): void {
     this.editSuccess = false;
+    this.isSubmitted = true;
   
     const postParams = new Map<string, any>([
       ['colorName',  this.colorName.value],
@@ -86,6 +118,10 @@ export class EditColorComponent implements OnInit {
     this.database.postRequest("edit", postParams).subscribe({
       next: (statusCode) => {
         this.editSuccess = statusCode === postSuccess;
+        this.newColorName = this.colorName.value;
+        this.newColorValue = this.colorValue.value;
+        this.toast.show();
+        this.colorEdited.emit();
       },
       error: (response: HttpErrorResponse) => {
         this.isDuplicateName = response.error.message.includes("unique_name");
@@ -103,11 +139,10 @@ export class EditColorComponent implements OnInit {
   
   public getTextColorForBackground(hex: string): string {
     if (!hex || hex.length !== 7) return '#000000';
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.6 ? '#000000' : '#FFFFFF';
+
+    const lumiescenceThreshold = 0.6;
+    return ContrastChecker.relativeLuminescence(hex) > lumiescenceThreshold ? '#000000' : '#FFFFFF';
+
   }
   
 }

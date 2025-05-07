@@ -2,28 +2,58 @@
     <div class="form-text">
         <h1>Add Color</h1>
         <hr />
-        <form [formGroup]="addColorForm" (ngSubmit)="onAddColorSubmit()">
-            <p>
-                Color Name:
-                <input type="text" formControlName="colorName" name="colorName" />
+        <form [formGroup]="addColorForm" (ngSubmit)="onAddColorSubmit()" novalidate>
+            
+                <div class="form-floating mb-2">
+                    <input class="form-control"
+                        type="text" 
+                        formControlName="colorName" 
+                        name="colorName" 
+                        id="colorName" 
+                        placeholder="red" 
+                        [class.is-invalid]="colorName.invalid && (colorName.touched || colorName.dirty)"
+                        [class.is-valid]="false"
+                        (click)="reinitializeFormIfNeeded()"
+                    />
+                    <label for="colorName">Color Name</label>
+                </div>
 
-                @if (addColorFormColorName?.invalid && (addColorFormColorName?.touched || addColorFormColorName?.dirty)) {
-                    @if (addColorFormColorName?.hasError('required')) { <span class="error-box" aria-live="polite">A Name is Required!</span> }
-                    @if (addColorFormColorName?.hasError('pattern')) { <span class="error-box" aria-live="polite">Name cannot be blank!</span> }
+                @if (colorName?.invalid && (colorName?.touched || colorName?.dirty)) {
+                    @if (colorName?.hasError('required')) { <span class="error-box mb-2" aria-live="polite">A Name is Required!</span> }
+                    @if (colorName?.hasError('pattern')) { <span class="error-box mb-2" aria-live="polite">Name cannot be blank!</span> }
                 }
-            </p>
+
             <p>
-                Color Value:
-                <input type="color" formControlName="colorValue" name="colorValue" />
+                <label for="colorValue">Color Value:</label>
+                <input type="color" formControlName="colorValue" name="colorValue" id="colorValue" class="m-2" />
             </p>
             <div class="submit-button-container">
-                <button type="submit" class="btn-19" [disabled]="!addColorForm.get('colorName')?.value?.trim()">Submit</button>
-                @if (addColorSuccess) {
+                <button type="submit" [disabled]="!addColorForm.get('colorName')?.value?.trim()">Submit</button>
+                @if (addColorSuccess && addColorForm.touched) {
                     <span class="success-box" aria-live="polite">Color added!</span>
-                } @else if (addColorFailure) {
-                    <span class="error-box" aria-live="polite">A color with that name or color value already exists!</span>
+                } @else if (isDuplicateColorName) {
+                    <span class="error-box" aria-live="polite">A color with that name already exists!</span>
+                } @else if (isDuplicateHexValue) {
+                    <span class="error-box" aria-live="polite">A color with that color value already exists!</span>
                 }
             </div>
         </form>
     </div>
 </div>
+
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+    <div #successToast id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="images/logo-no-text.png" class="rounded me-2 website-icon" alt="...">
+        <strong class="me-auto">GlimmerByte</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <strong>Color successfully added!</strong><br />
+        Color Name: <strong>{{ addedColorName }}</strong> <br />
+        Hex Value: <strong>{{ addedColorValue}}</strong> <br />
+        Color Preview:
+        <input type="color" [value]="addedColorValue" disabled />
+      </div>
+    </div>
+  </div>
