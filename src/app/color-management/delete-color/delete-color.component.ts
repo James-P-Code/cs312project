@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, NgFor, NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Database } from '../../api/database';
@@ -43,7 +43,7 @@ export class DeleteColorComponent implements OnInit {
 
   public initializeDeleteColorForm(): void {
     this.deleteColorForm = this.fb.group({
-      selectedColor: ['', Validators.required],
+      selectedId: ['', Validators.required],
       confirmDelete: [false]
     });
 
@@ -164,4 +164,8 @@ export class DeleteColorComponent implements OnInit {
 
     if (this.toast) this.toast.hide();
   }
+
+  get selectedId() {
+    return this.deleteColorForm.get('selectedId') as FormControl;
+  }  
 }

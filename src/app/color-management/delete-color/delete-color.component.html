@@ -5,9 +5,9 @@
 
 	  <form [formGroup]="deleteColorForm" (ngSubmit)="onDeleteColorSubmit()">
 		<p>
-		  Select Color:
+		  Select Color To Delete:
 		  <select
-				formControlName="selectedColor"
+				[formControl]="selectedId"
 				name="selectedColor"
 				class="color-dropdown"
 				[ngStyle]="{
@@ -24,7 +24,7 @@
 		</p>
   
 		<p>
-		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" />
+		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" style="margin-right: 0.5rem"/>
 		  <label for="confirmDelete">I confirm that I want to delete this color.</label>
 		</p>
 
