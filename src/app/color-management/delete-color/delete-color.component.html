@@ -16,6 +16,7 @@
 				}"
 				(click)="reinitializeFormIfNeeded()"
 			>
+				<option [ngValue]="null" disabled selected>Select a color</option>
 				<option *ngFor="let option of colorDropdownOptions" [value]="option.value">
 					{{ option.label }}
 				</option>

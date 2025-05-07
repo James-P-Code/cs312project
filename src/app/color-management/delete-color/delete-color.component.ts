@@ -90,12 +90,6 @@ export class DeleteColorComponent implements OnInit {
     this.resetFlags();
     this.isSubmitted = true;
 
-	// const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
-  //   if (!confirmed) {
-  //     this.confirmDeleteError = true;
-  //     return;
-  //   }
-
     if (this.allColorsArray.length <= 2) {
       this.notEnoughColors = true;
       return;
@@ -117,7 +111,12 @@ export class DeleteColorComponent implements OnInit {
           this.removeColorById(selectedId);
           this.toast.show();
           this.colorDeleted.emit();
-          this.deleteColorForm.reset();
+          this.deleteColorForm.reset({
+            selectedId: '',
+            confirmDelete: false
+          });
+          this.deleteColorForm.markAsPristine();
+          this.deleteColorForm.markAsUntouched();
         } else {
           this.deleteFailure = true;
         }
@@ -146,7 +145,6 @@ export class DeleteColorComponent implements OnInit {
     this.deleteSuccess = false;
     this.deleteFailure = false;
     this.notEnoughColors = false;
-	// this.confirmDeleteError = false;
   }
 
   public getTextColorForBackground(hex: string): string {
