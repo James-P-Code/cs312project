@@ -78,7 +78,7 @@ export class EditColorComponent {
   
     this.database.getRequest<ColorFromDatabase[]>(params).subscribe({
       next: (colors) => {
-        this.allColorsFromDatabase = colors;
+        this.allColorsFromDatabase = colors.slice(10);
       },
       error: (err) => console.error('Error fetching colors', err)
     });
