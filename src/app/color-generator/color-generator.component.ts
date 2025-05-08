@@ -312,7 +312,7 @@ export class ColorGeneratorComponent {
             .map((x: string) => this.formatCoord(x))
             .join(', ');
           if (coordText) {
-            this.generateColorCoordinatesList(secondColumnCell, coordText);
+            this.generateColorCoordinatesList(secondColumnCell, coordText + '\u00A0\u00A0');
           } else {
             secondColumnCell.textContent = '';
           }

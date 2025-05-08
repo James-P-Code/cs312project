@@ -25,12 +25,10 @@
               </select>
               }
             </div>
-
           </div>
         </td>
-        <td style="width: 80%" class="color-select-row">
-          <div class="color-select-row">
-
+        <td>
+          <div>
           </div>
         </td>
       </tr>
@@ -43,6 +41,7 @@
 <hr class="no-print">
 
 <div class="table-container">
+  <div class="coordinate-table-wrapper">
   <div class="table-wrapper">
     <!-- @if (isPrinting) {  Printable Table -->
     <table id="coordinate-table-printable" class="{{ printScaleClass }} print-only">
@@ -92,7 +91,7 @@
       </table>
     </cdk-virtual-scroll-viewport>
     }
-
+  </div>
   </div>
 </div>
 
