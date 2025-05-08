@@ -107,9 +107,15 @@ export class EditColorComponent {
   public onEditColorSubmit(): void {
     this.editSuccess = false;
     this.isSubmitted = true;
+
+    const inputName = this.colorName.value;
+    const trimmedName = inputName.trim() || '';
+    this.colorName.setValue(trimmedName);
+
+    if (this.editColorForm.invalid) return;
   
     const postParams = new Map<string, any>([
-      ['colorName',  this.colorName.value],
+      ['colorName',  trimmedName],
       ['colorValue', this.colorValue.value],
       ['id', Number(this.selectedId.value)]
     ]);
@@ -118,7 +124,7 @@ export class EditColorComponent {
     this.database.postRequest("edit", postParams).subscribe({
       next: (statusCode) => {
         this.editSuccess = statusCode === postSuccess;
-        this.newColorName = this.colorName.value;
+        this.newColorName = trimmedName;
         this.newColorValue = this.colorValue.value;
         this.toast.show();
         this.colorEdited.emit();

@@ -31,7 +31,8 @@ export class AddColorComponent {
     this.addColorForm = new FormGroup({
       colorName: new FormControl('', [
         Validators.required, 
-        Validators.pattern('.*\\S.*')]),
+        Validators.pattern('.*\\S.*'),
+        Validators.maxLength(15)]),
       colorValue: new FormControl('#e26daa', [
         Validators.required // grace - validators required
       ])});
@@ -55,10 +56,15 @@ export class AddColorComponent {
 
   public onAddColorSubmit(): void { // grace - void
     this.isSubmitted = true;
+
+    const inputName = this.addColorForm.value.colorName;
+    const trimmedName = inputName.trim() || '';
+    this.addColorForm.get('colorName')?.setValue(trimmedName);
+
     if (this.addColorForm.invalid) return;
 
     let postParams = new Map<string, any>([
-        ["colorName", String(this.addColorForm.value.colorName)],
+        ["colorName", trimmedName],
         ["colorValue", String(this.addColorForm.value.colorValue)]
     ]);
 

@@ -153,9 +153,41 @@ border-color: #dcdcdc;
   height: auto;
 }
 
+.toast {
+  opacity: 1 !important;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 .toast-header {
   background-color: #9582d4 !important;
   color: #ffffff;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.toast-header .me-auto {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+}
+
+.toast-header .btn-close {
+  filter: brightness(0.9);
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast-header .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.toast-body {
+  background-color: #f6f4fa;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 }
 
 .color-management-wrapper {
