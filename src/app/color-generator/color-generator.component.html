@@ -1,32 +1,41 @@
 <img src="images/transparent-logo.png" alt="Logo" class="print-only print-logo" />
 <hr class="no-print">
-@if (colors > 0) {
-<div class="table-one-wrapper">
-  <div class="table-wrapper">
-    <table id="tableone" class="no-print table-one">
-      @for (color of colorSelections; track $index) {
-      <tr id="color-select-row-{{ $index }}">
-        <td style=" width: 20%">
-          <div class="color-select-row" id="{{colorSelections[$index]}}">
-            <input type="radio" class="radio-input" name="selectedColor" [value]="$index"
-              [(ngModel)]="selectedRowIndex" />
-            <div class="dropdown-wrapper">
-              <label class="dropdown-label"></label>
-              @if (colorSelections.length > 0) {
-              <select class="color-dropdown" [ngStyle]="{ 'background-color': colorSelections[$index] }"
-                [(ngModel)]="colorSelections[$index]">
-                @let backgroundColor = colorSelections[$index];
-                @for (option of colorOptions; track option.label) {
-                <option [value]="option.value" [disabled]="isColorUsed(option.value)"
-                  [style.color]="checkColorContrast(backgroundColor, isColorUsed(option.value))">
-                  {{ option.label }}
-                </option>
-                }
-              </select>
-              }
-            </div>
+<div class="table-one-wrapper table-wrapper">
+  <form [formGroup]="colorSelectionForm">
+    <table id="tableone" class="no-print table-one" formArrayName="colorSelections">
+        @for (colorFormControl of colorOptionsFormArray.controls; track colorFormControl; let colorSelectionIndex = $index) {
+        <tr [formGroupName]="colorSelectionIndex">
+          <td>
+            <div class="color-select-row">
+              <input 
+                  type="radio" 
+                  class="radio-input" 
+                  formControlName="selectedColor" 
+                  [value]="colorFormControl.value.color"
+                  (click)="updateOldColor(colorFormControl.value.color)"
+                  (change)="updateSelectedColor(colorFormControl.value.color)"
+              />
+              <div class="dropdown-wrapper">
+                <label class="dropdown-label"></label>
+                <select 
+                  class="color-dropdown" 
+                  [style.background-color]="colorFormControl.value.color.hex_value"
+                  formControlName="color"
+                  (change)="updateColors()"
+                >
+                  @for (color of colorOptions; track color.id) {
+                    <option 
+                      [ngValue]="color" 
+                      [disabled]="isColorUsed(color)"
+                      [style.color]="checkColorContrast(colorFormControl.value.color.hex_value, isColorUsed(color))"
+                    >
+                      {{ color.name }}
+                    </option>
+                  }
+                </select>
+              </div>
 
-          </div>
+            </div>
         </td>
         <td style="width: 80%" class="color-select-row">
           <div class="color-select-row">
@@ -34,11 +43,10 @@
           </div>
         </td>
       </tr>
-      }
+    }
     </table>
-  </div>
+  </form>
 </div>
-}
 
 <hr class="no-print">
 
@@ -56,7 +64,7 @@
       <tr>
         <th>{{ rowNumber + 1 }}</th>
         @for (column of columnIndices; track $index; let columnNumber = $index) {
-        <td class="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
+        <td>
           @if (isRevealed(rowNumber, columnNumber)) {
           {{ headerLetters[columnNumber] + (rowNumber + 1) }}
           }
@@ -80,10 +88,11 @@
         <tr>
           <th class="sticky-column">{{ rowNumber + 1 }}</th>
           @for (column of columnIndices; track $index; let columnNumber = $index) {
-          <td (click)="onCellClick(rowNumber, columnNumber)"
-            class="{{ headerLetters[columnNumber] + (rowNumber + 1) }}">
+            @let cellCoordinate = headerLetters[columnNumber] + (rowNumber + 1);
+          <td (click)="onCellClick(rowNumber, columnNumber); onTableClick(cellCoordinate)"
+          [style.background-color]="getCellBackgroundColor(cellCoordinate)">
             <span [class.hidden]="!isRevealed(rowNumber, columnNumber)">
-              {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+              {{ cellCoordinate }}
             </span>
           </td>
           }

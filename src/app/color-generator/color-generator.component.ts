@@ -2,138 +2,84 @@ import {
   Component,
   Input,
   SimpleChanges,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   HostListener,
 } from '@angular/core';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { NgStyle } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
 import { HttpParams } from '@angular/common/http';
-import { find, first, map } from 'rxjs';
 
 type ColorFromDatabase = { id: number; name: string; hex_value: string };
 
 @Component({
   selector: 'app-color-generator',
   standalone: true,
-  imports: [NgStyle, FormsModule, ScrollingModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, ScrollingModule, ReactiveFormsModule],
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
 })
 export class ColorGeneratorComponent {
   @Input() rows: number = 0;
   @Input() columns: number = 0;
-  @Input() colors: number = 0;
+  @Input() amountOfColorOptions: number = 0;
 
   public rowIndices: number[] = [];
   public columnIndices: number[] = [];
   public headerLetters: string[] = [];
   public isTableVisible = false;
 
-  public colorOptions: { label: string; value: string }[] = [];
+  public colorOptions: ColorFromDatabase[] = [];
 
   public selectedRowIndex: number | null = null;
   public colorSelections: string[] = [];
+  public colorSelectionForm: FormGroup = new FormGroup ({
+    colorSelections: new FormArray([])
+  });
+  private tableCellColors: Map<string, ColorFromDatabase | null> = new Map();
+  private oldColor: ColorFromDatabase | null = null;
+  private selectedColor: ColorFromDatabase | null = null;
 
   constructor(private cdr: ChangeDetectorRef, private database: Database) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['rows'] || changes['columns'] || changes['colors']) {
-      this.initializeTable();
+    if (changes['rows'] || changes['columns'] || changes['amountOfColorOptions']) {
+      this.initialize();
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const coordinateTable = document.querySelector(
-        '#coordinate-table'
-      ) as HTMLElement;
-      coordinateTable!.style.display = 'inline';
-    });
   }
 
-  private initializeTable() {
+  private initialize(): void {
     this.rowIndices = new Array(this.rows);
     this.columnIndices = new Array(this.columns);
-
     this.headerLetters = Array.from({ length: this.columns }, (_, i) =>
       this.convertHeaderNumberToLetters(i)
     );
-
     this.getColorsFromDatabase();
-
-    const previousColorCount = this.colorSelections.length;
-    const previousSelectedIndex = this.selectedRowIndex;
-
-    // Updates the radio button on initialization or updates so one is always selected.
-    // Lots of logs for different edge cases, possibly remove/comment out after shipping finished product
-    if (
-      this.colorSelections.length > 0 &&
-      (this.selectedRowIndex === null ||
-        this.selectedRowIndex >= this.colorSelections.length)
-    ) {
-      this.selectedRowIndex = 0;
-      console.log(`
-        [ColorGenerator] Radio button reset triggered.
-        Previous color count: ${previousColorCount}, New color count: ${this.colorSelections.length},
-        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
-    } else if (
-      this.colorSelections.length > 0 &&
-      this.selectedRowIndex === null
-    ) {
-      this.selectedRowIndex = 0;
-      console.log(`
-        [ColorGenerator] Initial radio button selection.
-        Color count: ${this.colorSelections.length}, Selected index set to: ${this.selectedRowIndex}`);
-    } else if (
-      this.colorSelections.length === 0 &&
-      this.selectedRowIndex !== null
-    ) {
-      this.selectedRowIndex = null;
-      console.log(`
-        [ColorGenerator] Radio button deselected due to no available colors.
-        Previous selected index: ${previousSelectedIndex}`);
-    } else if (this.selectedRowIndex !== previousSelectedIndex) {
-      console.log(`
-        [ColorGenerator] Selected index changed (unlikely due to table update logic).
-        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
-    } else {
-      console.log(`
-        [ColorGenerator] Table initialized/updated, radio button selection unchanged.
-        Color count: ${this.colorSelections.length}, Current selected index: ${this.selectedRowIndex}`);
-    }
-
-    this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
   }
 
   private getColorsFromDatabase(): void {
     let httpParams = new HttpParams({ fromObject: { param: 'colors' } });
-    this.database
-      .getRequest<ColorFromDatabase[]>(httpParams)
-      .subscribe((colors) => {
-        this.setColorOptions(colors);
-      });
+    this.database.getRequest<ColorFromDatabase[]>(httpParams)
+                 .subscribe((colors) => {
+                    this.colorOptions = colors;
+                    this.setColorSelections();
+                  });
   }
 
-  private setColorOptions(colors: ColorFromDatabase[]) {
-    this.colorOptions = colors.map((color) => ({
-      label: color.name,
-      value: color.hex_value,
-    }));
-
-    this.colorSelections = Array.from(
-      { length: this.colors },
-      (_, i) => this.colorOptions[i % this.colorOptions.length].value
-    );
-
-    this.onColorChange();
+  private setColorSelections(): void {
+    this.colorOptionsFormArray.clear();
+    for (let i = 0; i < this.amountOfColorOptions; i++) {
+      this.colorOptionsFormArray.push(new FormGroup({
+        selectedColor: new FormControl(null),
+        color: new FormControl<ColorFromDatabase>(this.colorOptions[i])
+      }))
+    }
   }
 
-  private onColorChange(): void {
-    this.cdr.detectChanges(); // force Angular to re-run template bindings
+  public get colorOptionsFormArray(): FormArray {
+    return this.colorSelectionForm.get('colorSelections') as FormArray;
   }
 
   private convertHeaderNumberToLetters(headerNumber: number): string {
@@ -142,16 +88,14 @@ export class ColorGeneratorComponent {
     let letters = '';
 
     while (headerNumber >= 0) {
-      letters =
-        String.fromCharCode((headerNumber % alphabetSize) + asciiOffset) +
-        letters;
+      letters = String.fromCharCode((headerNumber % alphabetSize) + asciiOffset) + letters;
       headerNumber = Math.floor(headerNumber / alphabetSize) - 1;
     }
     return letters;
   }
 
-  isColorUsed(color: string): boolean {
-    return this.colorSelections.includes(color);
+  isColorUsed(color: ColorFromDatabase): boolean {
+    return this.colorOptionsFormArray.controls.some(control => control.value === color.name);
   }
 
   checkColorContrast(backgroundColor: string, isDisabled: boolean): string {
@@ -159,23 +103,16 @@ export class ColorGeneratorComponent {
     let textColor = '';
 
     // set the initial text color
-    if (isDisabled) {
-      // light grey if selection option is disabled
+    if (isDisabled) { // light grey if selection option is disabled
       textColor = '#D3D3D3';
-    } else {
-      // otherwise set the initial color based on the background
-      let backgroundLuminescence =
-        ContrastChecker.relativeLuminescence(backgroundColor);
+    } else { // otherwise set the initial color based on the background
+      let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
       const lumiescenceThreshold = 0.179;
-      textColor =
-        backgroundLuminescence > lumiescenceThreshold ? '#000000' : '#FFFFFF';
+      textColor = backgroundLuminescence > lumiescenceThreshold ? '#000000' : '#FFFFFF';
     }
 
     // check the contrast of the initial text color vs the background
-    let contrastValue = ContrastChecker.constrastRatio(
-      textColor,
-      backgroundColor
-    );
+    let contrastValue = ContrastChecker.constrastRatio(textColor, backgroundColor);
     const minimumContrast = 4.5;
 
     if (contrastValue < minimumContrast) {
@@ -187,13 +124,30 @@ export class ColorGeneratorComponent {
     return textColor;
   }
 
-  private setDropDownTextColor(backgroundColor: string) {
-    let backgroundLuminescence =
-      ContrastChecker.relativeLuminescence(backgroundColor);
-    const lumiescenceThreshold = 0.179;
-    return backgroundLuminescence > lumiescenceThreshold
-      ? '#000000'
-      : '#FFFFFF';
+  public updateSelectedColor(selectedColor: ColorFromDatabase): void {
+    this.selectedColor = selectedColor;
+  }
+
+  public updateOldColor(oldColor: ColorFromDatabase): void {
+    this.oldColor = oldColor;
+  }
+
+  public updateColors(): void {
+    this.tableCellColors.forEach((color, cellCoordinate) => {
+      if (color?.hex_value === this.oldColor?.hex_value) {
+        this.tableCellColors.set(cellCoordinate, this.selectedColor);
+      }
+    })
+  }
+
+  public getCellBackgroundColor(cellCoordinates: string): string {
+    const defaultColor: string = "#ffffff";
+    return this.tableCellColors.get(cellCoordinates)?.hex_value || defaultColor;
+  }
+
+  public onTableClick(cellCoordinates: string): void {
+    this.tableCellColors.set(cellCoordinates, this.selectedColor);
+    console.log(this.tableCellColors);
   }
 
   public printPage() {
