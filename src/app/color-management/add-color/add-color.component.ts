@@ -80,7 +80,7 @@ export class AddColorComponent {
           toast.show();
           this.colorAdded.emit();
           this.initializeAddColorForm();
-        }
+      }
       },
       error: (response: HttpErrorResponse) => {
         console.log("Error: " + response.message);

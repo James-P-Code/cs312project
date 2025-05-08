@@ -128,6 +128,15 @@ export class EditColorComponent {
         this.newColorValue = this.colorValue.value;
         this.toast.show();
         this.colorEdited.emit();
+        this.editColorForm.reset({
+          selectedId: null,
+          colorName: '',
+          colorValue: '#e26daa'
+        });
+        setTimeout(() => {
+          this.editSuccess = false;
+        }
+        , 5000);
       },
       error: (response: HttpErrorResponse) => {
         this.isDuplicateName = response.error.message.includes("unique_name");

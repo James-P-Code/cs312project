@@ -117,6 +117,9 @@ export class DeleteColorComponent implements OnInit {
           });
           this.deleteColorForm.markAsPristine();
           this.deleteColorForm.markAsUntouched();
+          setTimeout(() => {
+            this.deleteSuccess = false;
+          }, 5000);
         } else {
           this.deleteFailure = true;
         }
