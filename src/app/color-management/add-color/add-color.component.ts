@@ -73,6 +73,7 @@ export class AddColorComponent {
           const toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
           toast.show();
           this.colorAdded.emit();
+          this.initializeAddColorForm();
         }
       },
       error: (response: HttpErrorResponse) => {

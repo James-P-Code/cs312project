@@ -1,9 +1,7 @@
-:host {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;    /* Center vertically */
+  :host {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
   }
 
   .logo-container {

@@ -1,13 +1,13 @@
 <div class="form-container">
-	<div class="form-text">
+	<div class="form-text delete-color-box">
 	  <h1>Delete Color</h1>
 	  <hr />
 
 	  <form [formGroup]="deleteColorForm" (ngSubmit)="onDeleteColorSubmit()">
 		<p>
-		  Select Color:
+		  Select Color To Delete:
 		  <select
-				formControlName="selectedColor"
+				[formControl]="selectedId"
 				name="selectedColor"
 				class="color-dropdown"
 				[ngStyle]="{
@@ -16,7 +16,7 @@
 				}"
 				(click)="reinitializeFormIfNeeded()"
 			>
-				<option value="" disabled selected>Select a color</option>
+				<option [ngValue]="null" disabled selected>Select a color</option>
 				<option *ngFor="let option of colorDropdownOptions" [value]="option.value">
 					{{ option.label }}
 				</option>
@@ -24,7 +24,7 @@
 		</p>
   
 		<p>
-		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" />
+		  <input type="checkbox" formControlName="confirmDelete" id="confirmDelete" style="margin-right: 0.5rem"/>
 		  <label for="confirmDelete">I confirm that I want to delete this color.</label>
 		</p>
 

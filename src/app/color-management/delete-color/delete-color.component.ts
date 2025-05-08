@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf, NgFor, NgStyle } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Database } from '../../api/database';
@@ -43,7 +43,7 @@ export class DeleteColorComponent implements OnInit {
 
   public initializeDeleteColorForm(): void {
     this.deleteColorForm = this.fb.group({
-      selectedColor: ['', Validators.required],
+      selectedId: ['', Validators.required],
       confirmDelete: [false]
     });
 
@@ -81,7 +81,7 @@ export class DeleteColorComponent implements OnInit {
   }
 
   public getSelectedHex(): string {
-	const selectedId = this.deleteColorForm?.value?.selectedColor;
+	const selectedId = this.deleteColorForm?.value?.selectedId;
 	const match = this.allColorsArray.find(c => c.id.toString() === selectedId);
 	return match?.hex ?? '#ffffff';
 	}
@@ -90,18 +90,12 @@ export class DeleteColorComponent implements OnInit {
     this.resetFlags();
     this.isSubmitted = true;
 
-	// const confirmed = this.deleteColorForm.get('confirmDelete')?.value;
-  //   if (!confirmed) {
-  //     this.confirmDeleteError = true;
-  //     return;
-  //   }
-
     if (this.allColorsArray.length <= 2) {
       this.notEnoughColors = true;
       return;
     }
 
-    const selectedId = +this.deleteColorForm.value.selectedColor;
+    const selectedId = +this.deleteColorForm.value.selectedId;
     this.deletedColorName = this.allColorsArray.find(color => color.id === selectedId)!.name;
     this.deletedColorValue = this.allColorsArray.find(color => color.id === selectedId)!.hex;
 
@@ -117,6 +111,12 @@ export class DeleteColorComponent implements OnInit {
           this.removeColorById(selectedId);
           this.toast.show();
           this.colorDeleted.emit();
+          this.deleteColorForm.reset({
+            selectedId: '',
+            confirmDelete: false
+          });
+          this.deleteColorForm.markAsPristine();
+          this.deleteColorForm.markAsUntouched();
         } else {
           this.deleteFailure = true;
         }
@@ -145,7 +145,6 @@ export class DeleteColorComponent implements OnInit {
     this.deleteSuccess = false;
     this.deleteFailure = false;
     this.notEnoughColors = false;
-	// this.confirmDeleteError = false;
   }
 
   public getTextColorForBackground(hex: string): string {
@@ -164,4 +163,8 @@ export class DeleteColorComponent implements OnInit {
 
     if (this.toast) this.toast.hide();
   }
+
+  get selectedId() {
+    return this.deleteColorForm.get('selectedId') as FormControl;
+  }  
 }

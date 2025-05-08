@@ -47,6 +47,13 @@
     max-width: none !important;
   }
 
+  th,
+  .sticky-header th,
+  .sticky-column {
+    text-align: center;
+    vertical-align: middle;
+  }
+
   body {
     overflow: visible !important;
   }
@@ -116,18 +123,29 @@ table {
 }
 
 td {
+  width: 30px;
+  height: 30px;
   border: 1px solid;
+  text-align: center;
+  vertical-align: middle;
 }
 
 th {
+  width: 30px;
+  height: 30px;
   border: 1px solid;
   background-color: black;
   color: white;
 }
 
-.sticky-header {
+.sticky-header th {
   position: sticky;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
   background-color: black;
+  font-weight: bold;
   top: 0;
   color: white;
   padding: 5px;
@@ -136,8 +154,13 @@ th {
 
 .sticky-column {
   position: sticky;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  vertical-align: middle;
   left: 0;
   background-color: black;
+  font-weight: bold;
   color: white;
   z-index: 10;
 }
@@ -163,20 +186,22 @@ th {
 }
 
 .table-one {
-  width: 100%;
+  width: auto;
   max-width: 1000px;
   min-width: 700px;
   table-layout: fixed;
+  border-collapse: collapse;
 }
 
 .table-one tr {
-  height: 2rem; /* or use `padding` on td if you want more control */
+  height: 2rem;
 }
 
 .color-select-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .radio-input {
@@ -224,11 +249,33 @@ option:disabled {
 
 .table-one td:first-child {
   vertical-align: middle;
+  width: 20%;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
 }
 
-.table-one td {
-  color: black;
+.table-one td,
+.table-one th {
+  border: 1px solid black;
+  padding: 0;
 }
+
+.table-one td:nth-child(2) {
+  width: 80%;
+}
+
+.table-one td:nth-child(2) .color-select-row {
+  min-height: 2rem;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* .table-one td {
+  color: black;
+} */
 
 .example-viewport {
   height: 800px;
@@ -252,6 +299,7 @@ option:disabled {
 
 .print-button-container {
   margin: 0 0 3rem 1rem;
+  display: block;
 }
 
 hr {
@@ -271,4 +319,44 @@ hr {
   width: 35px;
   height: auto;
   z-index: 9999;
+}
+
+.after-print-button-spacer {
+  height: 0.1rem;
+}
+
+button {
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  color: #6d4ae2;
+  border-color: #6d4ae2;
+}
+
+button:hover {
+  color: #fff;
+  background-color: #6d4ae2;
+  border-color: #4b1de2;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  color: #b0b0b0;
+  background-color: #f0f0f0;
+  border-color: #dcdcdc;
+}
+
+button:disabled:hover {
+  color: #b0b0b0;
+  background-color: #f0f0f0;
+  border-color: #dcdcdc;
 }

@@ -3,19 +3,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Monoton&display=swap");
 
 header {
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
+  width: 100%;
   background-color: var(--primary, #2b3a56);
   color: white;
-  text-shadow: 1px 1px 2px #000;
-  font-family: "Pacifico", cursive;
-  letter-spacing: 3px;
-  -webkit-text-stroke: 0.05px black;
-  position: relative;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
-  z-index: 2;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  padding: 0 1rem;
+}
+
+html, body {
+  overflow-x: auto;
 }
 
 a {
@@ -30,6 +42,9 @@ header a h1 {
   font-size: 2rem;
   font-family: "Monoton";
   margin: 0;
+  text-shadow: 1px 1px 2px #000;
+  -webkit-text-stroke: 0.05px black;
+  letter-spacing: 3px;
 }
 
 .website-icon {
@@ -40,10 +55,10 @@ header a h1 {
 }
 
 nav {
-  margin-left: 10px;
-  background: transparent;
-  overflow: hidden;
-  align-self: flex-end;
+  margin-left: 1rem;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
 }
 
 nav ul {
@@ -51,12 +66,17 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: left;
+  flex-wrap: nowrap;
+  height: 100%;
+  align-items: flex-end;
 }
 
 nav ul li {
+  flex: 0 0 auto;
   margin: 0;
+  height: 100%;
 }
+
 nav ul li:first-child a {
   border-top-left-radius: 8px;
 }
@@ -64,8 +84,9 @@ nav ul li:last-child a {
   border-top-right-radius: 8px;
 }
 
+/* Buttons */
 nav ul li a {
-  display: block;
+  display: flex;
   color: var(--text, white);
   background-color: var(--accent-one, rgba(255, 255, 255, 0.546));
   text-align: center;
@@ -77,6 +98,9 @@ nav ul li a {
   position: relative;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 nav ul li a:hover {
@@ -84,30 +108,3 @@ nav ul li a:hover {
   transform: translateY(-2px);
   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.4);
 }
-
-/* nav ol {
-  list-style-type: none;
-}
-
-nav li {
-  padding: 12px;
-  color: #8c8c88;
-  text-decoration: none;
-  font-size: 20px;
-  display: inline-block;
-  background: blueviolet;
-  border: none;
-  cursor: pointer;
-}
-
-nav li:hover {
-  background-color: #29524a;
-  color: #94a187;
-}
-
-nav li.active {
-  background-color: #94a187;
-  text-decoration: none;
-  font-weight: bold;
-  color: #0e0906;
-} */
