@@ -27,7 +27,7 @@ export class AboutComponent {
     ),
     new AboutItem(
       'Declan McLaughlin',
-      'My name is Declan McLaughlin and I am in my final semester of a Computer Science degree. I am working an internship as a Systems Engineer and hope to convert that into a full time position. My favorite programming languages are Java and Python and I started learning PostgreSQL this year. In my free time I like to mountain bike and rock climb with my friends.',
+      'My name is Declan McLaughlin and I am in my final semester of a Computer Science degree. I am working an internship as a Systems Engineer and will start working for them full time starting in the fall! My favorite programming languages are Java and Python and I started learning PostgreSQL this year. In my free time I like to mountain bike and rock climb with my friends.',
       'images/declan.jpg',
       true // This reverses the order of the image and bio in the display for this item
     ),

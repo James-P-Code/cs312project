@@ -6,6 +6,9 @@
 
   .logo-container {
     animation: hoverAnimation 3s infinite alternate;
+    justify-content: center;
+    align-items: center;
+    display: flex;
   }
 
   .logo {

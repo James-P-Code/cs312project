@@ -1,9 +1,15 @@
 form p {
-    margin: 1rem;
+    /* margin: 1rem; */
+    padding: 0 2rem 0 2rem;
+}
+
+.first-form {
+    margin-top: 2rem;
 }
 
 .submit-button-container {
-    margin: 1rem 0 3rem 1rem;
+    /* margin: 1rem 0 3rem 1rem; */
+    padding: 0 2rem 0 2rem;
 }
 
 .error-box {
