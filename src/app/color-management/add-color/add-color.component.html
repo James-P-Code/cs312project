@@ -30,7 +30,7 @@
             </p>
             <div class="submit-button-container">
                 <button type="submit" [disabled]="colorName.invalid || !addColorForm.get('colorName')?.value?.trim()">Submit</button>
-                @if (addColorSuccess && addColorForm.touched) {
+                @if (addColorSuccess) {
                     <span class="success-box" aria-live="polite">Color added!</span>
                 } @else if (isDuplicateColorName) {
                     <span class="error-box" aria-live="polite">A color with that name already exists!</span>

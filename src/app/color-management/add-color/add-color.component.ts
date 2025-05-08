@@ -70,16 +70,27 @@ export class AddColorComponent {
 
     const successCode = 201;
 
-    this.database.postRequest("add", postParams).subscribe({ // grace - changed this section
+    this.database.postRequest("add", postParams).subscribe({
       next: responseCode => {
         if (responseCode == successCode) {
-          this.addColorSuccess = true;
           this.addedColorName = this.addColorForm.value.colorName;
           this.addedColorValue = this.addColorForm.value.colorValue;
+          this.addColorSuccess = true;
+
           const toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
           toast.show();
           this.colorAdded.emit();
-          this.initializeAddColorForm();
+
+          this.addColorForm.reset({
+            selectedId: '',
+            colorName: '',
+            colorValue: '#e26daa'
+          });
+
+          setTimeout(() => {
+            this.addColorSuccess = false;
+            this.initializeAddColorForm
+          }, 5000);
       }
       },
       error: (response: HttpErrorResponse) => {
