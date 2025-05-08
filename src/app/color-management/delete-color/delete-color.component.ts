@@ -68,8 +68,8 @@ export class DeleteColorComponent implements OnInit {
         for (const color of this.allColorsArray) {
           this.allColors.set(color.name, { id: color.id, hex: color.hex });
         }
-
-        this.colorDropdownOptions = this.allColorsArray.map((color) => ({
+        const visibleColors = this.allColorsArray.slice(10); // Slice cuts out the first 10 elements in the list keeping the OG colors
+        this.colorDropdownOptions = visibleColors.map(color => ({
           label: color.name,
           value: color.id.toString()
         }));
@@ -81,10 +81,10 @@ export class DeleteColorComponent implements OnInit {
   }
 
   public getSelectedHex(): string {
-	const selectedId = this.deleteColorForm?.value?.selectedId;
-	const match = this.allColorsArray.find(c => c.id.toString() === selectedId);
-	return match?.hex ?? '#ffffff';
-	}
+    const selectedId = this.deleteColorForm?.value?.selectedId;
+    const match = this.allColorsArray.find(c => c.id.toString() === selectedId);
+    return match?.hex ?? '#ffffff';
+  }
 
   public onDeleteColorSubmit(): void {
     this.resetFlags();
@@ -137,7 +137,8 @@ export class DeleteColorComponent implements OnInit {
       const nameToRemove = this.allColorsArray[index].name;
       this.allColorsArray.splice(index, 1);
       this.allColors.delete(nameToRemove);
-      this.colorDropdownOptions = this.allColorsArray.map((color) => ({
+      const visibleColors = this.allColorsArray.slice(10);
+      this.colorDropdownOptions = visibleColors.map(color => ({
         label: color.name,
         value: color.id.toString()
       }));
@@ -169,5 +170,5 @@ export class DeleteColorComponent implements OnInit {
 
   get selectedId() {
     return this.deleteColorForm.get('selectedId') as FormControl;
-  }  
+  }
 }
