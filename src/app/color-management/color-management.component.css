@@ -157,3 +157,7 @@ border-color: #dcdcdc;
   background-color: #9582d4 !important;
   color: #ffffff;
 }
+
+.color-management-wrapper {
+  padding-bottom: 2rem;
+}
