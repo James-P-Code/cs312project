@@ -48,9 +48,7 @@ export class ColorGeneratorComponent {
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const coordinateTable = document.querySelector(
-        '#coordinate-table'
-      ) as HTMLElement;
+      const coordinateTable = document.querySelector('#coordinate-table') as HTMLElement;
       coordinateTable!.style.display = 'inline';
     });
   }
@@ -65,45 +63,11 @@ export class ColorGeneratorComponent {
 
     this.getColorsFromDatabase();
 
-    const previousColorCount = this.colorSelections.length;
-    const previousSelectedIndex = this.selectedRowIndex;
-
-    // Updates the radio button on initialization or updates so one is always selected.
-    // Lots of logs for different edge cases, possibly remove/comment out after shipping finished product
-    if (
-      this.colorSelections.length > 0 &&
-      (this.selectedRowIndex === null ||
-        this.selectedRowIndex >= this.colorSelections.length)
-    ) {
+    // Ensure the selection resets if the current index is invalid after regeneration
+    if (this.colorSelections.length > 0 &&
+        (this.selectedRowIndex === null || this.selectedRowIndex >= this.colorSelections.length)) {
       this.selectedRowIndex = 0;
-      console.log(`
-        [ColorGenerator] Radio button reset triggered.
-        Previous color count: ${previousColorCount}, New color count: ${this.colorSelections.length},
-        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
-    } else if (
-      this.colorSelections.length > 0 &&
-      this.selectedRowIndex === null
-    ) {
-      this.selectedRowIndex = 0;
-      console.log(`
-        [ColorGenerator] Initial radio button selection.
-        Color count: ${this.colorSelections.length}, Selected index set to: ${this.selectedRowIndex}`);
-    } else if (
-      this.colorSelections.length === 0 &&
-      this.selectedRowIndex !== null
-    ) {
-      this.selectedRowIndex = null;
-      console.log(`
-        [ColorGenerator] Radio button deselected due to no available colors.
-        Previous selected index: ${previousSelectedIndex}`);
-    } else if (this.selectedRowIndex !== previousSelectedIndex) {
-      console.log(`
-        [ColorGenerator] Selected index changed (unlikely due to table update logic).
-        Previous selected index: ${previousSelectedIndex}, New selected index: ${this.selectedRowIndex}`);
-    } else {
-      console.log(`
-        [ColorGenerator] Table initialized/updated, radio button selection unchanged.
-        Color count: ${this.colorSelections.length}, Current selected index: ${this.selectedRowIndex}`);
+      console.log('[ColorGenerator] Selected index reset to first option due to omitted selection.');
     }
 
     this.isTableVisible = this.rows > 0 && this.columns > 0 && this.colors > 0;
@@ -128,6 +92,13 @@ export class ColorGeneratorComponent {
       { length: this.colors },
       (_, i) => this.colorOptions[i % this.colorOptions.length].value
     );
+
+    // Reset selection here too in case options changed
+    if (this.colorSelections.length > 0 &&
+        (this.selectedRowIndex === null || this.selectedRowIndex >= this.colorSelections.length)) {
+      this.selectedRowIndex = 0;
+      console.log('[ColorGenerator] Selected index reset to first option after fetching colors.');
+    }
 
     this.onColorChange();
   }
@@ -299,13 +270,9 @@ export class ColorGeneratorComponent {
 
   private updateColorCoordinates(selectionHashMap: SelectionHashMap) {
     for (const key of Object.keys(selectionHashMap)) {
-      const rowElement = document.getElementById(
-        `color-select-row-${parseInt(key)}`
-      );
+      const rowElement = document.getElementById(`color-select-row-${parseInt(key)}`);
       if (rowElement) {
-        const secondColumnCell = rowElement.querySelector(
-          `td:nth-child(2)`
-        ) as HTMLElement;
+        const secondColumnCell = rowElement.querySelector(`td:nth-child(2)`) as HTMLElement;
         if (secondColumnCell) {
           secondColumnCell.textContent = '';
           const coordText = selectionHashMap[key]
@@ -335,17 +302,11 @@ export class ColorGeneratorComponent {
   paintColorFromHashMap(selectionHashMap: SelectionHashMap): void {
     this.clearGridColor();
     Object.keys(selectionHashMap).forEach((key) => {
-      const rowElement = document.getElementById(
-        `color-select-row-${parseInt(key)}`
-      );
+      const rowElement = document.getElementById(`color-select-row-${parseInt(key)}`);
       if (!rowElement) return;
 
-      const secondColumnCell = rowElement.querySelector(
-        `td:nth-child(2)`
-      ) as HTMLElement;
-      const firstColumnCell = rowElement.querySelector(
-        `td:nth-child(1)`
-      ) as HTMLElement;
+      const secondColumnCell = rowElement.querySelector(`td:nth-child(2)`) as HTMLElement;
+      const firstColumnCell = rowElement.querySelector(`td:nth-child(1)`) as HTMLElement;
 
       if (!secondColumnCell || !firstColumnCell) return;
 
@@ -366,8 +327,10 @@ export class ColorGeneratorComponent {
       });
     });
   }
+
   clearGridColor() {}
 }
+
 interface SelectionHashMap {
   [rowId: string]: Array<string>;
 }
