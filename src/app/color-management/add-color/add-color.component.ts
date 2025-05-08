@@ -31,7 +31,8 @@ export class AddColorComponent {
     this.addColorForm = new FormGroup({
       colorName: new FormControl('', [
         Validators.required, 
-        Validators.pattern('.*\\S.*')]),
+        Validators.pattern('.*\\S.*'),
+        Validators.maxLength(15)]),
       colorValue: new FormControl('#e26daa', [
         Validators.required // grace - validators required
       ])});
@@ -55,26 +56,42 @@ export class AddColorComponent {
 
   public onAddColorSubmit(): void { // grace - void
     this.isSubmitted = true;
+
+    const inputName = this.addColorForm.value.colorName;
+    const trimmedName = inputName.trim() || '';
+    this.addColorForm.get('colorName')?.setValue(trimmedName);
+
     if (this.addColorForm.invalid) return;
 
     let postParams = new Map<string, any>([
-        ["colorName", String(this.addColorForm.value.colorName)],
+        ["colorName", trimmedName],
         ["colorValue", String(this.addColorForm.value.colorValue)]
     ]);
 
     const successCode = 201;
 
-    this.database.postRequest("add", postParams).subscribe({ // grace - changed this section
+    this.database.postRequest("add", postParams).subscribe({
       next: responseCode => {
         if (responseCode == successCode) {
-          this.addColorSuccess = true;
           this.addedColorName = this.addColorForm.value.colorName;
           this.addedColorValue = this.addColorForm.value.colorValue;
+          this.addColorSuccess = true;
+
           const toast = bootstrap.Toast.getOrCreateInstance(this.successToast.nativeElement);
           toast.show();
           this.colorAdded.emit();
-          this.initializeAddColorForm();
-        }
+
+          this.addColorForm.reset({
+            selectedId: '',
+            colorName: '',
+            colorValue: '#e26daa'
+          });
+
+          setTimeout(() => {
+            this.addColorSuccess = false;
+            this.initializeAddColorForm
+          }, 5000);
+      }
       },
       error: (response: HttpErrorResponse) => {
         console.log("Error: " + response.message);

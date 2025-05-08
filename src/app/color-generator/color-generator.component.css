@@ -33,7 +33,7 @@
 
   table {
     font-size: 6px;
-    width: 100% !important;
+    width: auto;
     table-layout: fixed;
     border-collapse: collapse;
     margin-top: 75px;
@@ -107,6 +107,7 @@
 table {
   border-collapse: collapse;
   table-layout: fixed;
+  width: auto;
 }
 
 .table-wrapper {
@@ -115,11 +116,13 @@ table {
   height: auto;
   color: var(--text);
   padding: 1rem;
+  margin-top: 0.5rem;
   background: var(--background);
   border-radius: 16px;
-  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   border: var(--accent-two) 2px solid;
   overflow: visible;
+  overflow-x: auto;
 }
 
 td {
@@ -165,12 +168,6 @@ th {
   z-index: 10;
 }
 
-.color-coordinate-canvas-area {
-  width: 80%;
-  max-height: 400px;
-  overflow: auto;
-}
-
 .hidden {
   visibility: hidden;
 }
@@ -180,16 +177,17 @@ th {
 }
 
 .table-one-wrapper {
-  padding: 0 5rem 0 1rem;
-  width: 100%;
+  display: inline-block;
+  padding: 0 2rem 0 2rem;
+  max-width: 100%;
   box-sizing: border-box;
+  overflow-x: auto;
 }
 
 .table-one {
   width: auto;
-  max-width: 1000px;
   min-width: 700px;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
 }
 
@@ -198,10 +196,9 @@ th {
 }
 
 .color-select-row {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  width: 100%;
 }
 
 .radio-input {
@@ -249,7 +246,6 @@ option:disabled {
 
 .table-one td:first-child {
   vertical-align: middle;
-  width: 20%;
   white-space: nowrap;
   overflow: visible;
   text-overflow: unset;
@@ -262,24 +258,18 @@ option:disabled {
 }
 
 .table-one td:nth-child(2) {
-  width: 80%;
-}
-
-.table-one td:nth-child(2) .color-select-row {
-  min-height: 2rem;
   width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  max-width: 0;
+  white-space: nowrap;
+  text-align: left;
+  padding-left: 0.5rem;
+  /* padding-right: 0.5rem; */
+  overflow-x: auto;
 }
-
-/* .table-one td {
-  color: black;
-} */
 
 .example-viewport {
-  height: 800px;
-  width: 1200px;
+  width: 800px;
+  height: 1200px;
 }
 
 .color-preview {
@@ -291,14 +281,22 @@ option:disabled {
 
 .table-container {
   margin-bottom: 2rem;
-  margin-left: 1rem;
-  max-width: 100%;
+  /* max-width: 100%; */
+  /* width: auto; */
+  height: auto;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.coordinate-table-wrapper {
+  box-sizing: border-box;
+  overflow-x: auto;
+  padding: 0 2rem 0 2rem;
 }
 
 .print-button-container {
-  margin: 0 0 3rem 1rem;
+  margin: 0 0 3rem 2rem;
   display: block;
 }
 
