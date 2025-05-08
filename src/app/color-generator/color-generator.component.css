@@ -313,9 +313,6 @@ hr {
 
 .print-only {
   display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 35px;
   height: auto;
   z-index: 9999;
