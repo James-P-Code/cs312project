@@ -312,6 +312,28 @@ option:disabled {
   display: block;
 }
 
+.print-button {
+  background-color: #f9f9ff;
+  color: #6d4ae2;
+  border: 1px solid #6d4ae2;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.print-button:hover {
+  background-color: #6d4ae2;
+  color: white;
+  opacity: 1;
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.print-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
+}
+
 hr {
   border: none;
   border-top: 3px solid var(--accent-one);

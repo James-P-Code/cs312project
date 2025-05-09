@@ -1,65 +1,95 @@
-<div class="description-wrapper no-print">
-    <div class="description">
-        <p>Glimmerbyte is a color therapy app that allows users to create and print out their very own generated fill in the cell coloring table.</p>
-        <h5>Instructions</h5>
-        <ol>
-            <li>Select the number of rows within the range (1-1000).</li>
-            <li>Select the number of columns within the range (1-702).</li>
-            <li>Select the number of color options you would like to have.</li>
-            <li>Click 'Submit' to create your table.</li>
-            <li>Select the color you would like to 'draw' with and click on the cells to fill them in.</li>
-            <li>If you would like to change the color of those selected tiles you can change it in the dropdown menu.</li>
-        </ol>
-    </div>
-</div>
-
-<hr class="no-print">
-
-<form class="no-print" [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
-    <div class="first-form">
-    <p>
-        Rows (1-1000):
-        <input type="text" formControlName="rows" name="rows" />
-
-        @if (rows?.invalid && (rows?.touched || rows?.dirty)) {
-            @if (rows?.hasError('required')) { <span class="error-box">Required!</span> }
-            @if (rows?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
-            @if (rows?.hasError('max')) { <span class="error-box">Maximum is 1000!</span> }
-            @if (rows?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
-
-        }
-    </p>
-    </div>
-    <p>
-        Columns (1-702):
-        <input type="text" formControlName="columns" name="columns" />
-
-        @if (columns?.invalid && (columns?.touched || columns?.dirty)) {
+<div class="top-container">
+    <!-- Left side: Form -->
+    <div class="forms-container">
+      <form class="no-print" [formGroup]="rowsColumnsColorsForm" (ngSubmit)="onSubmit()">
+        <div class="first-form">
+          <p>
+            Rows (1–1000):
+            <input type="text" formControlName="rows" name="rows" />
+            @if (rows?.invalid && (rows?.touched || rows?.dirty)) {
+              @if (rows?.hasError('required')) { <span class="error-box">Required!</span> }
+              @if (rows?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
+              @if (rows?.hasError('max')) { <span class="error-box">Maximum is 1000!</span> }
+              @if (rows?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
+            }
+          </p>
+        </div>
+        <p>
+          Columns (1–702):
+          <input type="text" formControlName="columns" name="columns" />
+          @if (columns?.invalid && (columns?.touched || columns?.dirty)) {
             @if (columns?.hasError('required')) { <span class="error-box">Required!</span> }
             @if (columns?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
             @if (columns?.hasError('max')) { <span class="error-box">Maximum is 702!</span> }
             @if (columns?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
-        }
-    </p>
-    <p>
-        Colors (1-{{ this.numberOfColorsInDatabase }}):
-        <input type="text" formControlName="colors" name="colors" />
-        
-        @if (colors?.invalid && (colors?.touched || colors?.dirty)) {
+          }
+        </p>
+        <p>
+          Colors (1–{{ this.numberOfColorsInDatabase }}):
+          <input type="text" formControlName="colors" name="colors" />
+          @if (colors?.invalid && (colors?.touched || colors?.dirty)) {
             @if (colors?.hasError('required')) { <span class="error-box">Required!</span> }
             @if (colors?.hasError('min')) { <span class="error-box">Minimum is 1!</span> }
             @if (colors?.hasError('max')) { <span class="error-box">Maximum is {{ this.numberOfColorsInDatabase }}!</span> }
             @if (colors?.hasError('pattern')) { <span class="error-box">Only numeric characters are allowed!</span> }
-
-        }
-    </p>
-
-    <div class="submit-button-container">
-        <button class="primary-button" type="submit"[disabled]="rowsColumnsColorsForm.invalid">Submit</button>
+          }
+        </p>
+        <div class="submit-button-container">
+          <button class="primary-button submit-button" type="submit" [disabled]="rowsColumnsColorsForm.invalid">Submit</button>
+        </div>
+      </form>
     </div>
-</form>
-
-@if (formSubmitted) {
-    <app-color-generator [rows]="numberOfRows!" [columns]="numberOfColumns!" [amountOfColorOptions]="numberOfColors!">
+  
+    <!-- Right side: Instructions Button -->
+    <div class="instruction-button-container">
+      <button type="button" class="btn btn-outline-primary instruction-button" data-bs-toggle="modal" data-bs-target="#instructionModal">
+        <i class="bi bi-info-circle"></i> Instructions
+      </button>
+    </div>
+  </div>
+  
+  <!-- Generator appears only after form submit -->
+  @if (formSubmitted) {
+    <app-color-generator
+      [rows]="numberOfRows!"
+      [columns]="numberOfColumns!"
+      [amountOfColorOptions]="numberOfColors!">
     </app-color-generator>
-}
+  }
+  
+  <!-- Modal -->
+  <div class="modal fade" id="instructionModal" tabindex="-1" aria-labelledby="instructionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="instructionModalLabel">Welcome to GlimmerByte</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>GlimmerByte</strong> is designed to create printable color-by-number grids. These are used in vision therapy for individuals with visual processing difficulties. You can paint a grid, print it, and use it as a focus or coloring activity.</p>
+          <h6 class="mt-4">How to Use GlimmerByte:</h6>
+          <ol>
+            <li>Enter the number of <strong>rows</strong> (1 to 1000).</li>
+            <li>Enter the number of <strong>columns</strong> (1 to 702).</li>
+            <li>Enter the number of <strong>colors</strong> you'd like to use (from your custom list of available colors).</li>
+            <li>Click <strong>Submit</strong> to generate your custom grid.</li>
+            <li>From the upper color table, select a color to mark as active.</li>
+            <li>Click on cells in the lower grid to paint them with the active color.</li>
+            <li>Coordinates of painted cells will appear in the top table under the color used.</li>
+            <li>Use the color dropdown to change a color. All painted cells with the old color will update.</li>
+            <li>Click <strong>Print</strong> to generate a coloring sheet:
+              <ul>
+                <li>Colored cells will appear blank.</li>
+                <li>Color names and coordinates will appear in the top reference table.</li>
+                <li>This becomes a color-by-number sheet!</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
