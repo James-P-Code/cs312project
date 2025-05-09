@@ -62,6 +62,7 @@ form p {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 0.5rem;
 }
 
 .form-line label {
@@ -85,6 +86,7 @@ form p {
   padding: 0.5rem 0.75rem;
   margin-top: 0.5rem;
   margin-left: 0;
+  margin-bottom: 0.5rem;
   border: 1px solid #ff6b6b;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -264,16 +266,19 @@ span.error-box::before {
 }
 
 .form-section {
+  display: flex;
+  justify-content: center;
   position: absolute;
   max-width: 450px;
   padding: 1.5rem 0rem 0 0;
   margin: 0 auto;
+  margin-bottom: 3rem;
 }
 
 .instruction-button-icon {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 0.25rem;
+  right: 0.25rem;
   background-color: #f9f9ff;
   color: #6d4ae2;
   border: 1px solid #6d4ae2;
@@ -300,3 +305,6 @@ span.error-box::before {
   box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
 }
 
+.generator-wrapper {
+  margin-top: 15.5rem;
+}

@@ -1,4 +1,5 @@
 <div class="top-container">
+  <div class="form-wrapper">
   <div class="form-section">
     
     <!-- Instructions Icon Button -->
@@ -62,15 +63,18 @@
       </div>
     </form>
   </div>
+  </div>
 </div>
 
 <!-- Generator appears only after form submit -->
 @if (formSubmitted) {
+  <div class="generator-wrapper">
   <app-color-generator
     [rows]="numberOfRows!"
     [columns]="numberOfColumns!"
     [amountOfColorOptions]="numberOfColors!">
   </app-color-generator>
+  </div>
 }
 
 <!-- Modal -->
@@ -103,7 +107,7 @@
         </ol>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
       </div>
     </div>
   </div>
