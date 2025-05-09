@@ -159,13 +159,11 @@ export class ColorGeneratorComponent {
   }
 
   public paintTableCell(cellCoordinates: string): void {
-    console.log(cellCoordinates);
     if (this.tableCellColors.get(cellCoordinates) != this.currentlySelectedColor) {
       this.tableCellColors.set(cellCoordinates, this.currentlySelectedColor);
     } else {
       this.tableCellColors.delete(cellCoordinates);
     }
-    console.log(this.tableCellColors);
   }
 
   public isTableCellPainted(cellCoordinate: string): boolean {
