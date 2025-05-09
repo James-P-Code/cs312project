@@ -33,10 +33,11 @@
 
   table {
     font-size: 6px;
-    width: auto;
-    table-layout: fixed;
+    width: 100% !important;
+    table-layout: auto;
     border-collapse: collapse;
     margin-top: 75px;
+    overflow: visible !important;
   }
 
   td,
