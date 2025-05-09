@@ -196,7 +196,7 @@ th {
 }
 
 .color-select-row {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
 }
