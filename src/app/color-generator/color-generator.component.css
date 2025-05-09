@@ -75,6 +75,9 @@
 
   .print-only {
     display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    z-index: 9999;
   }
 
   .screen-only {
