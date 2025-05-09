@@ -72,8 +72,12 @@ export class ColorGeneratorComponent {
         .pipe(startWith(colorControl.value), pairwise())
         .subscribe(([previousValue, newValue]) => {
           if (previousValue.color != newValue.color) {
-            this.previouslySelectedColor = previousValue.color;
-            this.currentlySelectedColor = newValue.color;
+            this.tableCellColors.forEach((cellColor, coord) => {
+              if (cellColor?.hex_value === previousValue.color.hex_value) {
+                this.tableCellColors.set(coord, newValue.color);
+              }
+            });
+    
           }
         });
     });
@@ -81,10 +85,10 @@ export class ColorGeneratorComponent {
     this.removeUnavailableColorsFromTable();
 
     // Auto-select first color
-    if (this.colorOptions.length > 0 && this.colorOptionsFormArray.length > 0) {
-      const firstColorControl = this.colorOptionsFormArray.at(0);
-      firstColorControl.get('selectedColor')?.setValue(this.colorOptions[0]);
-      this.currentlySelectedColor = this.colorOptions[0];
+    if (this.colorOptionsFormArray.length > 0 || this.colorOptionsFormArray.length > 0) {
+      const firstGroup = this.colorOptionsFormArray.at(0);
+      firstGroup.get('selectedColor')!.setValue(firstGroup.get('color')!.value);
+      this.selectedRowIndex = 0;
     }
   }
 
@@ -167,12 +171,21 @@ export class ColorGeneratorComponent {
   }
 
   public paintTableCell(cellCoordinates: string): void {
-    if (this.tableCellColors.get(cellCoordinates) != this.currentlySelectedColor) {
-      this.tableCellColors.set(cellCoordinates, this.currentlySelectedColor);
+    if (this.selectedRowIndex === null) return;
+    
+    const rg = this.colorOptionsFormArray.at(this.selectedRowIndex);
+    const paintColor: ColorFromDatabase = rg.get('color')!.value;
+
+    if (this.tableCellColors.get(cellCoordinates)?.id !== paintColor.id) {
+      this.tableCellColors.set(cellCoordinates, paintColor);
     } else {
       this.tableCellColors.delete(cellCoordinates);
     }
   }
+
+  public onSelectRow(i: number) {
+    this.selectedRowIndex = i;
+  }  
 
   public isTableCellPainted(cellCoordinate: string): boolean {
     return this.tableCellColors.has(cellCoordinate);

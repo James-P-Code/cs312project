@@ -17,17 +17,12 @@
               <input
                 type="radio"
                 class="radio-input"
-                [style.visibility]="isPrinting ? 'hidden' : 'visible'"
                 formControlName="selectedColor"
                 name="selectedColor"
                 [value]="colorFormControl.value.color"
-                (change)="
-                  updateCurrentlySelectedColor(colorFormControl.value.color)
-                "
-                (click)="
-                  updatePreviouslySelectedColor(colorFormControl.value.color)
-                "
+                (change)="onSelectRow(colorSelectionIndex)"
               />
+              <!--Insert this line in the input above to make the radio button color the same as the selected color:  [style.accent-color]="colorFormControl.value.color.hex_value" -->
               <div class="dropdown-wrapper" style="display: block;">
                 <label class="dropdown-label"></label>
                 <select
