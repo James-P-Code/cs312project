@@ -1,6 +1,7 @@
 import { Component, Input, SimpleChanges, HostListener } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgStyle } from '@angular/common';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
 import { HttpParams } from '@angular/common/http';
@@ -11,11 +12,10 @@ type ColorFromDatabase = { id: number; name: string; hex_value: string };
 @Component({
   selector: 'app-color-generator',
   standalone: true,
-  imports: [FormsModule, ScrollingModule, ReactiveFormsModule],
+  imports: [FormsModule, ScrollingModule, ReactiveFormsModule, NgStyle],
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
 })
-
 export class ColorGeneratorComponent {
   @Input() rows: number = 0;
   @Input() columns: number = 0;
@@ -26,7 +26,7 @@ export class ColorGeneratorComponent {
   public headerLetters: string[] = [];
   public colorOptions: ColorFromDatabase[] = [];
   public selectedRowIndex: number | null = null;
-  public colorSelectionForm: FormGroup = new FormGroup ({ colorSelections: new FormArray([]) });
+  public colorSelectionForm: FormGroup = new FormGroup({ colorSelections: new FormArray([]) });
   public isPrinting: boolean = false;
   private tableCellColors: Map<string, ColorFromDatabase | null> = new Map();
   private previouslySelectedColor: ColorFromDatabase | null = null;
@@ -52,10 +52,10 @@ export class ColorGeneratorComponent {
   private getColorsFromDatabase(): void {
     let httpParams = new HttpParams({ fromObject: { param: 'colors' } });
     this.database.getRequest<ColorFromDatabase[]>(httpParams)
-                 .subscribe((colors) => {
-                    this.colorOptions = colors;
-                    this.setColorSelectionsForm();
-                  });
+      .subscribe((colors) => {
+        this.colorOptions = colors;
+        this.setColorSelectionsForm();
+      });
   }
 
   private setColorSelectionsForm(): void {
@@ -64,7 +64,7 @@ export class ColorGeneratorComponent {
       this.colorOptionsFormArray.push(new FormGroup({
         selectedColor: new FormControl(null),
         color: new FormControl<ColorFromDatabase>(this.colorOptions[i])
-      }))
+      }));
     }
 
     this.colorOptionsFormArray.controls.forEach((colorControl) => {
@@ -75,30 +75,30 @@ export class ColorGeneratorComponent {
             this.previouslySelectedColor = previousValue.color;
             this.currentlySelectedColor = newValue.color;
           }
-        })
-    })
+        });
+    });
+
     this.removeUnavailableColorsFromTable();
 
-    // Auto-select first color (e.g., red) as selectedColor
+    // Auto-select first color
     if (this.colorOptions.length > 0 && this.colorOptionsFormArray.length > 0) {
       const firstColorControl = this.colorOptionsFormArray.at(0);
       firstColorControl.get('selectedColor')?.setValue(this.colorOptions[0]);
       this.currentlySelectedColor = this.colorOptions[0];
     }
-
   }
 
   private removeUnavailableColorsFromTable(): void {
     let allColorsInForm = new Set(
       this.colorOptionsFormArray.controls
-      .map(formControl => formControl.get('color')?.value.id)
+        .map(formControl => formControl.get('color')?.value.id)
     );
 
     this.tableCellColors.forEach((cellColor, cellCoordinate) => {
       if (!allColorsInForm.has(cellColor?.id)) {
         this.tableCellColors.delete(cellCoordinate);
       }
-    })
+    });
   }
 
   public get colorOptionsFormArray(): FormArray {
@@ -124,10 +124,10 @@ export class ColorGeneratorComponent {
   public adjustColorContrast(backgroundColor: string, isDisabled: boolean = false): string {
     const lightGrey = '#d3d3d3';
     const black = '#000000';
-    const white = '#ffffff'
+    const white = '#ffffff';
     let textColor = lightGrey;
 
-    if (!isDisabled) { 
+    if (!isDisabled) {
       let backgroundLuminescence = ContrastChecker.relativeLuminescence(backgroundColor);
       const lumiescenceThreshold = 0.179;
       textColor = backgroundLuminescence > lumiescenceThreshold ? black : white;
@@ -150,7 +150,7 @@ export class ColorGeneratorComponent {
       if (color?.hex_value === this.previouslySelectedColor?.hex_value) {
         this.tableCellColors.set(cellCoordinate, this.currentlySelectedColor);
       }
-    })
+    });
   }
 
   public getCellBackgroundColor(cellCoordinates: string): string {
@@ -160,10 +160,10 @@ export class ColorGeneratorComponent {
 
   public getCoordinatesPaintedWithColor(color: string): string {
     return Array.from(this.tableCellColors)
-                .filter(([cellCoordinate, cellColor]) => cellColor?.name === color)
-                .map(([cellCoordinate]) => cellCoordinate.replace(/\s/g, ""))
-                .sort()
-                .join(", ");
+      .filter(([cellCoordinate, cellColor]) => cellColor?.name === color)
+      .map(([cellCoordinate]) => cellCoordinate.replace(/\s/g, ""))
+      .sort()
+      .join(", ");
   }
 
   public paintTableCell(cellCoordinates: string): void {
@@ -178,9 +178,8 @@ export class ColorGeneratorComponent {
     return this.tableCellColors.has(cellCoordinate);
   }
 
-  public printPage() {
+  public printPage(): void {
     this.isPrinting = true;
-
     setTimeout(() => {
       window.print();
     }, 100);
@@ -195,12 +194,21 @@ export class ColorGeneratorComponent {
   }
 
   @HostListener('window:beforeprint', [])
-  onBeforePrint() {
+  onBeforePrint(): void {
     this.isPrinting = true;
   }
 
   @HostListener('window:afterprint', [])
-  onAfterPrint() {
+  onAfterPrint(): void {
     this.isPrinting = false;
+  }
+
+  public getTextColorForBackground(hex: string): string {
+    if (!hex || hex.length !== 7) return '#000000';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? '#000000' : '#FFFFFF';
   }
 }

@@ -22,8 +22,11 @@
               <div class="dropdown-wrapper">
                 <label class="dropdown-label"></label>
                 <select 
-                  class="color-dropdown" 
-                  [style.background-color]="colorFormControl.value.color.hex_value"
+                  class="color-dropdown"
+                  [ngStyle]="{
+                    'background-color': colorFormControl.value.color.hex_value,
+                    'color': getTextColorForBackground(colorFormControl.value.color.hex_value)
+                  }"
                   formControlName="color"
                   (change)="updateTableCellColors()"
                 >
@@ -43,7 +46,7 @@
           <td style="width: 80%">
             <div class="column-two-inner">
               @let thisRowsColor = colorFormControl.get('color')?.value?.name;
-              <span>{{ getCoordinatesPaintedWithColor(thisRowsColor) + '\u00A0\u00A0\u00A0'}}</span>
+              <span>{{ getCoordinatesPaintedWithColor(thisRowsColor) + '\u00A0\u00A0\u00A0' }}</span>
             </div>
           </td>
         </tr>
@@ -57,7 +60,7 @@
 
 <div class="coordinate-table-wrapper">
   <div class="table-wrapper">
-    <!-- @if (isPrinting) {  Printable Table -->
+    <!-- Printable version -->
     <table id="coordinate-table-printable" class="{{ printScaleClass }} print-only">
       <tr class="sticky-header">
         <th></th>
@@ -78,7 +81,8 @@
       </tr>
       }
     </table>
-    <!-- } -->
+
+    <!-- Screen version -->
     @if (!isPrinting) {
     <cdk-virtual-scroll-viewport 
       itemSize="20" 
