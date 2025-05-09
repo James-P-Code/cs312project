@@ -28,7 +28,7 @@
                   updatePreviouslySelectedColor(colorFormControl.value.color)
                 "
               />
-              <div class="dropdown-wrapper">
+              <div class="dropdown-wrapper" style="display: block;">
                 <label class="dropdown-label"></label>
                 <select
                   class="color-dropdown"
@@ -56,6 +56,9 @@
                   </option>
                   }
                 </select>
+                <span class="m-2" [style.display]="isPrinting ? 'inline' : 'none'">
+                  {{ colorFormControl.value.color.hex_value }}
+                </span>
               </div>
             </div>
           </td>
