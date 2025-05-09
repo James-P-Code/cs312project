@@ -23,6 +23,10 @@
     transform-origin: top left;
   }
 
+  .color-select-row, .column-two-inner {
+    font-size: 1.05rem;
+  }
+
   tr {
     page-break-inside: avoid;
   }
