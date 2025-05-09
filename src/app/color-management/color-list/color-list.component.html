@@ -1,0 +1,62 @@
+<div class="form-container">
+	<div class="form-text">
+	  <h1>Color List</h1>
+	  <hr />
+	  <p class="color-table-note">Only custom colors can be edited or deleted.</p>
+  
+	  <div class="dual-table-wrapper">
+		<!-- Built-in Colors Table -->
+		<div class="color-table-box">
+		  <div class="color-table-title">Built-in Colors</div>
+		  <table class="color-table">
+			<thead>
+			  <tr>
+				<th>Name</th>
+				<th>Color Value</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  @for (color of builtInColors; track color.id) {
+				<tr>
+				  <td class="built-in-name-cell">{{ color.name }}</td>
+				  <td [ngStyle]="{
+						'background-color': color.hex,
+						'color': getTextColorForBackground(color.hex)
+					  }">
+					{{ color.hex.toUpperCase() }}
+				  </td>
+				</tr>
+			  }
+			</tbody>
+		  </table>
+		</div>
+  
+		<!-- Custom Colors Table -->
+		<div class="color-table-box">
+		  <div class="color-table-title">Custom Colors</div>
+		  <table class="color-table">
+			<thead>
+			  <tr>
+				<th>Name</th>
+				<th>Color Value</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  @for (color of customColors; track color.id) {
+				<tr>
+				  <td>{{ color.name }}</td>
+				  <td [ngStyle]="{
+						'background-color': color.hex,
+						'color': getTextColorForBackground(color.hex)
+					  }">
+					{{ color.hex.toUpperCase() }}
+				  </td>
+				</tr>
+			  }
+			</tbody>
+		  </table>
+		</div>
+	  </div>
+	</div>
+  </div>
+  
