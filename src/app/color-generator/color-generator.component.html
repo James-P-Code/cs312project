@@ -1,61 +1,93 @@
 <img src="images/transparent-logo.png" alt="Logo" class="print-only print-logo" />
 <hr class="no-print">
-<div class="table-one-wrapper table-wrapper">
-  <form [formGroup]="colorSelectionForm">
-    <table id="tableone" class="table-one" formArrayName="colorSelections">
+
+<div class="table-one-wrapper">
+  <div class="table-wrapper">
+    <form [formGroup]="colorSelectionForm">
+      <table id="tableone" class="table-one" formArrayName="colorSelections">
         @for (colorFormControl of colorOptionsFormArray.controls; track colorFormControl; let colorSelectionIndex = $index) {
-            <tr [formGroupName]="colorSelectionIndex">
-              <td>
-                <div class="color-select-row">
-                  <input 
-                      type="radio" 
-                      class="radio-input"
-                      [style.visibility]="isPrinting ? 'hidden' : 'visible'" 
-                      formControlName="selectedColor" 
-                      name="selectedColor"
-                      [value]="colorFormControl.value.color"
-                      (change)="updateCurrentlySelectedColor(colorFormControl.value.color)"
-                      (click)="updatePreviouslySelectedColor(colorFormControl.value.color)"
-                  />
-                  <div class="dropdown-wrapper">
-                    <label class="dropdown-label"></label>
-                    <select 
-                      class="color-dropdown" 
-                      [style.background-color]="colorFormControl.value.color.hex_value"
-                      formControlName="color"
-                      (change)="updateTableCellColors()"
-                    >
-                      @for (color of colorOptions; track color.id) {
-                        <option 
-                          [ngValue]="color" 
-                          [disabled]="isColorDropDownSelection(color)"
-                          [style.color]="adjustColorContrast(colorFormControl.value.color.hex_value, isColorDropDownSelection(color))"
-                        >
-                          {{ color.name }}
-                        </option>
-                      } <!-- end for color of colorOptions -->
-                    </select>
-                  </div>
-                </div>
-            </td>
-            <td style="width: 80%">
-              <div class="color-select-row m-2" [style.font-size]="isPrinting ? '1.15rem' : '1rem'">
-                @let thisRowsColor = colorFormControl.get('color')?.value?.name;
-                <strong>{{ getCoordinatesPaintedWithColor(thisRowsColor) }}</strong> 
+        <tr [formGroupName]="colorSelectionIndex">
+          <td>
+            <div class="color-select-row">
+              <input 
+                type="radio" 
+                class="radio-input"
+                [style.visibility]="isPrinting ? 'hidden' : 'visible'" 
+                formControlName="selectedColor" 
+                name="selectedColor"
+                [value]="colorFormControl.value.color"
+                (change)="updateCurrentlySelectedColor(colorFormControl.value.color)"
+                (click)="updatePreviouslySelectedColor(colorFormControl.value.color)"
+              />
+              <div class="dropdown-wrapper">
+                <label class="dropdown-label"></label>
+                <select 
+                  class="color-dropdown" 
+                  [style.background-color]="colorFormControl.value.color.hex_value"
+                  formControlName="color"
+                  (change)="updateTableCellColors()"
+                >
+                  @for (color of colorOptions; track color.id) {
+                  <option 
+                    [ngValue]="color" 
+                    [disabled]="isColorDropDownSelection(color)"
+                    [style.color]="adjustColorContrast(colorFormControl.value.color.hex_value, isColorDropDownSelection(color))"
+                  >
+                    {{ color.name }}
+                  </option>
+                  }
+                </select>
               </div>
-            </td>
-          </tr>
-        } <!-- end for colorFormControl of colorOptionsFormArray.controls -->
-    </table>
-  </form>
+            </div>
+          </td>
+          <td style="width: 80%">
+            <div class="column-two-inner">
+              @let thisRowsColor = colorFormControl.get('color')?.value?.name;
+              <span>{{ getCoordinatesPaintedWithColor(thisRowsColor) + '\u00A0\u00A0\u00A0'}}</span>
+            </div>
+          </td>
+        </tr>
+        }
+      </table>
+    </form>
+  </div>
 </div>
 
 <hr class="no-print">
 
-  <div class="table-container">
-    <div class="table-wrapper">
-      <!-- @if (isPrinting) {  Printable Table -->
-      <table id="coordinate-table-printable" class="{{ printScaleClass }} print-only">
+<div class="coordinate-table-wrapper">
+  <div class="table-wrapper">
+    <!-- @if (isPrinting) {  Printable Table -->
+    <table id="coordinate-table-printable" class="{{ printScaleClass }} print-only">
+      <tr class="sticky-header">
+        <th></th>
+        @for (columns of columnsToDisplay; track $index) {
+        <th>{{ headerLetters[$index] }}</th>
+        }
+      </tr>
+      @for (row of rowsToDisplay; track $index; let rowNumber = $index) {
+      <tr>
+        <th>{{ rowNumber + 1 }}</th>
+        @for (column of columnsToDisplay; track $index; let columnNumber = $index) {
+        <td>
+          <span [style.visibility]="isPrinting ? 'hidden' : 'visible'">
+            {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+          </span>
+        </td>
+        }
+      </tr>
+      }
+    </table>
+    <!-- } -->
+    @if (!isPrinting) {
+    <cdk-virtual-scroll-viewport 
+      itemSize="20" 
+      minBufferPx="600" 
+      maxBufferPx="900" 
+      appendOnly
+      class="example-viewport screen-only"
+    >
+      <table id="coordinate-table" class="{{ printScaleClass }}">
         <tr class="sticky-header">
           <th></th>
           @for (columns of columnsToDisplay; track $index) {
@@ -64,58 +96,26 @@
         </tr>
         @for (row of rowsToDisplay; track $index; let rowNumber = $index) {
         <tr>
-          <th>{{ rowNumber + 1 }}</th>
+          <th class="sticky-column">{{ rowNumber + 1 }}</th>
           @for (column of columnsToDisplay; track $index; let columnNumber = $index) {
-          <td>
-            <span [style.visibility]="isPrinting ? 'hidden' : 'visible'">
-            {{ headerLetters[columnNumber] + (rowNumber + 1) }}
-            </span>
-            
-          </td>
+            @let cellCoordinate = headerLetters[columnNumber] + (rowNumber + 1);
+            <td 
+              (click)="paintTableCell(cellCoordinate)"
+              [style.background-color]="getCellBackgroundColor(cellCoordinate)"
+              [style.color]="adjustColorContrast(getCellBackgroundColor(cellCoordinate))"
+            >
+              <span [style.visibility]="isTableCellPainted(cellCoordinate) && !isPrinting ? 'visible' : 'hidden'">
+                {{ cellCoordinate }}
+              </span>
+            </td>
           }
         </tr>
         }
       </table>
-    <!-- } -->
-    @if (!isPrinting) { <!-- Visible Table -->
-      <cdk-virtual-scroll-viewport 
-        itemSize="20" 
-        minBufferPx="600" 
-        maxBufferPx="900" 
-        appendOnly
-        class="example-viewport screen-only"
-      >
-        <table id="coordinate-table" class="{{ printScaleClass }}">
-          <tr class="sticky-header">
-            <th></th>
-            @for (columns of columnsToDisplay; track $index) {
-            <th>{{ headerLetters[$index] }}</th>
-            }
-          </tr>
-          @for (row of rowsToDisplay; track $index; let rowNumber = $index) {
-            <tr>
-              <th class="sticky-column">{{ rowNumber + 1 }}</th>
-              @for (column of columnsToDisplay; track $index; let columnNumber = $index) {
-                @let cellCoordinate = headerLetters[columnNumber] + (rowNumber + 1);
-                <td 
-                  (click)="paintTableCell(cellCoordinate)"
-                  [style.background-color]="getCellBackgroundColor(cellCoordinate)"
-                  [style.color]="adjustColorContrast(getCellBackgroundColor(cellCoordinate))"
-                >
-                  <span [style.visibility]="isTableCellPainted(cellCoordinate) && !isPrinting ? 'visible' : 'hidden'">
-                    {{ cellCoordinate }}
-                  </span>
-                </td>
-              } <!-- end for column of columnsToDislay -->
-            </tr>
-          } <!-- end for rows of rowsToDislay -->
-        </table>
-      </cdk-virtual-scroll-viewport>
-    } <!-- end if (!isPrinting) -->
+    </cdk-virtual-scroll-viewport>
+    }
   </div>
 </div>
-
-
 
 <div class="print-button-container no-print">
   <button class="primary-button" (click)="printPage()">Print</button>

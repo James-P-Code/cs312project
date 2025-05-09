@@ -78,6 +78,14 @@ export class ColorGeneratorComponent {
         })
     })
     this.removeUnavailableColorsFromTable();
+
+    // Auto-select first color (e.g., red) as selectedColor
+    if (this.colorOptions.length > 0 && this.colorOptionsFormArray.length > 0) {
+      const firstColorControl = this.colorOptionsFormArray.at(0);
+      firstColorControl.get('selectedColor')?.setValue(this.colorOptions[0]);
+      this.currentlySelectedColor = this.colorOptions[0];
+    }
+
   }
 
   private removeUnavailableColorsFromTable(): void {
