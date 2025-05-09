@@ -104,13 +104,6 @@ span.error-box::before {
     color: #6d4ae2;
     border-color: #6d4ae2;
   }
-
-  /* background-color: #f9f9ff;
-  color: #6d4ae2;
-  border: 1px solid #6d4ae2;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: transform 0.2s ease, color 0.2s ease; */
   
   button:hover {
     background-color: #6d4ae2;
