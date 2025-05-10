@@ -7,10 +7,12 @@
   }
 
   .print-cell {
-    display: flex;
+    /* display: block; */
     justify-content: left;
-    /* width: 100%;
-    height: 100%; */
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
     padding: 0.5rem;
     font-size: 1.05rem;
   }
@@ -45,11 +47,17 @@
   }
 
   .column-two-cell {
-    display: flex;
+    /* display: flex; */
     justify-content: left;
     /* align-items: center; */
     /* padding: 0.5rem; */
     /* box-sizing: border-box; */
+  }
+
+  .column-two-inner {
+    display: block !important;
+    width: 100%;
+    height: 100%;
   }
 
   .color-dropdown,
@@ -96,41 +104,85 @@
   }
 
   .table-one td.first-child {
-    padding-left: 1rem !important;
+    vertical-align: top !important;
+    height: 100% !important;
+    padding: 0 !important;
+    /* padding-left: 1rem !important; */
     justify-content: left !important;
     text-align: left !important;
   }
 
+  .table-one td {
+    height: 100% !important;
+    box-sizing: border-box !important;
+  }
+
   .table-one tr {
+    width: 100% !important;
+    height: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
   .table-one {
     table-layout: fixed !important;
-    width: auto !important;
+    width: 100% !important;
   }
 
   .table-one td,
   .table-one th {
-    vertical-align: top !important;
+    /* vertical-align: top !important; */
     height: auto !important;
     justify-content: left !important;
   }
 
   table {
-    width: fit-content !important;
+    table-layout: fixed !important;
+    width: 100% !important;
     max-width: 100% !important;
     page-break-inside: avoid;
     overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .coordinate-table-wrapper,
+  .table-wrapper {
+    width: auto !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  #coordinate-table-printable {
+    table-layout: fixed !important;
+    width: 100% !important;
+  }
+
+  #coordinate-table-printable td,
+  #coordinate-table-printable th,
+  #coordinate-table-printable tr {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    border: 1px solid #000 !important;
+    box-sizing: border-box;
   }
 
   td,
   th {
-    padding: 4px;
+    /* padding: 4px; */
     border: 1px solid #000;
     word-wrap: break-word;
-    max-width: none !important;
+    /* max-width: none !important; */
     text-align: center;
     vertical-align: middle;
   }
@@ -143,6 +195,13 @@
     color: #fff !important;
   }
 
+  .sticky-column {
+    left: 0 !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    z-index: 10 !important;
+  }
+
   ::-webkit-scrollbar {
     display: none !important;
   }
@@ -150,6 +209,7 @@
   @page {
     size: A4 landscape;
     size: auto;
+    margin: 0.25in;
   }
 }
 
