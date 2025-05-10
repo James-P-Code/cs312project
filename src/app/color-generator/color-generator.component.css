@@ -2,7 +2,13 @@
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    background-color: white !important;
   }
+
+  body {
+    overflow: visible !important;
+  }
+
   .scale-100 {
     zoom: 1.5;
     transform-origin: top left;
@@ -23,59 +29,21 @@
     transform-origin: top left;
   }
 
-  .color-select-row, .column-two-inner {
+  .color-select-row,
+  .column-two-inner {
     font-size: 1.05rem;
   }
 
-  tr {
-    page-break-inside: avoid;
-  }
-
-  ::-webkit-scrollbar {
+  .color-dropdown,
+  .radio-input,
+  .dropdown-label,
+  .no-print,
+  .screen-only,
+  .cdk-virtual-scroll-viewport,
+  .example-viewport,
+  .print-button-container,
+  .after-print-button-spacer {
     display: none !important;
-  }
-
-  table {
-    font-size: 6px;
-    width: 100% !important;
-    table-layout: auto;
-    border-collapse: collapse;
-    margin-top: 75px;
-    overflow: visible !important;
-  }
-
-  td,
-  th {
-    padding: 4px;
-    border: 1px solid #000;
-    word-wrap: break-word;
-    max-width: none !important;
-  }
-
-  th,
-  .sticky-header th,
-  .sticky-column {
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  body {
-    overflow: visible !important;
-  }
-
-  .table-container {
-    overflow: visible !important;
-  }
-
-  .table-wrapper {
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-  }
-
-  @page {
-    size: A4 landscape;
-    margin: 10mm;
   }
 
   .print-only {
@@ -85,15 +53,6 @@
     z-index: 9999;
   }
 
-  .screen-only {
-    display: none !important;
-  }
-
-  .example-viewport,
-  .cdk-virtual-scroll-viewport {
-    display: none !important;
-  }
-
   .print-logo {
     max-width: 60px;
     height: auto;
@@ -101,14 +60,60 @@
     padding: 0;
     float: left;
   }
-}
 
-@media screen {
-  .print-only {
-    display: none;
+  .table-wrapper,
+  .table-container {
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
   }
-  .screen-only {
-    display: block;
+
+  .table-one-wrapper,
+  .coordinate-table-wrapper {
+    max-width: 100%;
+    overflow: visible !important;
+    padding: 0;
+  }
+
+  table {
+    max-width: 100% !important;
+    font-size: 6px;
+    /* border-collapse: collapse; */
+    /* table-layout: auto; */
+    /* margin-top: 75px; */
+    page-break-inside: avoid;
+  }
+
+  td,
+  th {
+    padding: 4px;
+    border: 1px solid #000;
+    word-wrap: break-word;
+    max-width: none !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .sticky-header th,
+  .sticky-column {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #000 !important;
+    color: #fff !important;
+  }
+
+  /* tr {
+    page-break-inside: avoid;
+  } */
+
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 landscape;
+    size: auto;
   }
 }
 
@@ -383,4 +388,79 @@ button:disabled:hover {
   color: #b0b0b0;
   background-color: #f0f0f0;
   border-color: #dcdcdc;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.modal-buttons .cancel-button {
+  background-color: #f9f9ff;
+  color: #8f8d8d;
+  border: 1px solid #8f8d8d;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: transform 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-buttons .cancel-button:hover {
+  background-color: #dcdcdc;
+  color: #333;
+  transform: scale(1.05);
+}
+
+.modal-buttons .cancel-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(209, 207, 207, 0.918);
+}
+
+.modal-buttons .confirm-button {
+  background-color: #f9f9ff;
+  color: #6d4ae2;
+  border: 1px solid #6d4ae2;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.modal-buttons .confirm-button:hover {
+  background-color: #6d4ae2;
+  color: white;
+  opacity: 1;
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.modal-buttons .confirm-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
 }

@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges, HostListener } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgStyle } from '@angular/common';
+import { NgStyle, NgIf } from '@angular/common';
 import { Database } from '../api/database';
 import { ContrastChecker } from '../utils/contrast-checker';
 import { HttpParams } from '@angular/common/http';
@@ -12,7 +12,7 @@ type ColorFromDatabase = { id: number; name: string; hex_value: string };
 @Component({
   selector: 'app-color-generator',
   standalone: true,
-  imports: [FormsModule, ScrollingModule, ReactiveFormsModule, NgStyle],
+  imports: [FormsModule, ScrollingModule, ReactiveFormsModule, NgStyle, NgIf],
   templateUrl: './color-generator.component.html',
   styleUrl: './color-generator.component.css',
 })
@@ -192,11 +192,9 @@ export class ColorGeneratorComponent {
   }
 
   public printPage(): void {
+    this.showModal();
     this.isPrinting = true;
-    setTimeout(() => {
-      window.print();
-    }, 100);
-  }
+    }
 
   get printScaleClass(): string {
     const colCount = this.columnsToDisplay.length;
@@ -224,4 +222,23 @@ export class ColorGeneratorComponent {
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     return luminance > 0.6 ? '#000000' : '#FFFFFF';
   }
+
+  showPrintReminder = false;
+
+confirmPrint() {
+  this.showPrintReminder = false;
+  setTimeout(() => {
+    window.print();
+  }, 100);
+}
+
+cancelPrint() {
+  this.isPrinting = false;
+  this.showPrintReminder = false;
+}
+
+  showModal() {
+    this.showPrintReminder = true;
+  }
+
 }

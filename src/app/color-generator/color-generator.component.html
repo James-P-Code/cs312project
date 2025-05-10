@@ -5,28 +5,27 @@
 />
 <hr class="no-print" />
 
+<!-- Table One (Color Selection Table) -->
 <div class="table-one-wrapper">
   <div class="table-wrapper">
     <form [formGroup]="colorSelectionForm">
       <table id="tableone" class="table-one" formArrayName="colorSelections">
-        @for (colorFormControl of colorOptionsFormArray.controls; track
-        colorFormControl; let colorSelectionIndex = $index) {
+        @for (colorFormControl of colorOptionsFormArray.controls; track colorFormControl; let colorSelectionIndex = $index) {
         <tr [formGroupName]="colorSelectionIndex">
           <td>
             <div class="color-select-row">
               <input
                 type="radio"
-                class="radio-input"
+                class="radio-input no-print"
                 formControlName="selectedColor"
                 name="selectedColor"
                 [value]="colorFormControl.value.color"
                 (change)="onSelectRow(colorSelectionIndex)"
               />
-              <!--Insert this line in the input above to make the radio button color the same as the selected color:  [style.accent-color]="colorFormControl.value.color.hex_value" -->
-              <div class="dropdown-wrapper" style="display: block;">
-                <label class="dropdown-label"></label>
+              <div class="dropdown-wrapper">
+                <!-- Dropdown (screen only) -->
                 <select
-                  class="color-dropdown"
+                  class="color-dropdown no-print"
                   [ngStyle]="{
                     'background-color': colorFormControl.value.color.hex_value,
                     color: getTextColorForBackground(
@@ -51,7 +50,9 @@
                   </option>
                   }
                 </select>
-                <span class="m-2" [style.display]="isPrinting ? 'inline' : 'none'">
+
+                <!-- Static hex value for print -->
+                <span class="print-only m-2">
                   {{ colorFormControl.value.color.hex_value }}
                 </span>
               </div>
@@ -60,10 +61,12 @@
           <td style="width: 80%">
             <div class="column-two-inner">
               @let thisRowsColor = colorFormControl.get('color')?.value?.name;
-              <span>{{
-                getCoordinatesPaintedWithColor(thisRowsColor) +
-                  "\u00A0\u00A0\u00A0"
-              }}</span>
+              <span>
+                {{
+                  getCoordinatesPaintedWithColor(thisRowsColor) +
+                    "\u00A0\u00A0\u00A0"
+                }}
+              </span>
             </div>
           </td>
         </tr>
@@ -75,9 +78,10 @@
 
 <hr class="no-print" />
 
+<!-- Coordinate Table Section -->
 <div class="coordinate-table-wrapper">
   <div class="table-wrapper">
-    <!-- Printable version -->
+    <!-- Printable Table -->
     <table
       id="coordinate-table-printable"
       class="{{ printScaleClass }} print-only"
@@ -91,16 +95,15 @@
       @for (row of rowsToDisplay; track $index; let rowNumber = $index) {
       <tr>
         <th>{{ rowNumber + 1 }}</th>
-        @for (column of columnsToDisplay; track $index; let columnNumber =
-        $index) { @let cellCoordinate = headerLetters[columnNumber] + (rowNumber
-        + 1);
+        @for (column of columnsToDisplay; track $index; let columnNumber = $index) {
+        @let cellCoordinate = headerLetters[columnNumber] + (rowNumber + 1);
         <td>
           <span
             [style.visibility]="
               isTableCellPainted(cellCoordinate) ? 'visible' : 'hidden'
             "
           >
-            {{ headerLetters[columnNumber] + (rowNumber + 1) }}
+            {{ cellCoordinate }}
           </span>
         </td>
         }
@@ -108,8 +111,7 @@
       }
     </table>
 
-    <!-- Screen version -->
-    @if (!isPrinting) {
+    <!-- Screen Table with Virtual Scroll -->
     <cdk-virtual-scroll-viewport
       itemSize="20"
       minBufferPx="600"
@@ -127,19 +129,16 @@
         @for (row of rowsToDisplay; track $index; let rowNumber = $index) {
         <tr>
           <th class="sticky-column">{{ rowNumber + 1 }}</th>
-          @for (column of columnsToDisplay; track $index; let columnNumber =
-          $index) { @let cellCoordinate = headerLetters[columnNumber] +
-          (rowNumber + 1);
+          @for (column of columnsToDisplay; track $index; let columnNumber = $index) {
+          @let cellCoordinate = headerLetters[columnNumber] + (rowNumber + 1);
           <td
             (click)="paintTableCell(cellCoordinate)"
             [style.background-color]="getCellBackgroundColor(cellCoordinate)"
-            [style.color]="
-              adjustColorContrast(getCellBackgroundColor(cellCoordinate))
-            "
+            [style.color]="adjustColorContrast(getCellBackgroundColor(cellCoordinate))"
           >
             <span
               [style.visibility]="
-                isTableCellPainted(cellCoordinate) && !isPrinting
+                isTableCellPainted(cellCoordinate)
                   ? 'visible'
                   : 'hidden'
               "
@@ -152,12 +151,28 @@
         }
       </table>
     </cdk-virtual-scroll-viewport>
-    }
   </div>
 </div>
 
+<!-- Print Button -->
 <div class="print-button-container no-print">
   <button class="primary-button print-button" (click)="printPage()">Print</button>
 </div>
 
 <div class="after-print-button-spacer no-print"></div>
+
+<!-- Landscape Orientation Reminder Modal -->
+<div
+  id="printReminderModal"
+  class="modal-backdrop"
+  *ngIf="showPrintReminder"
+>
+  <div class="modal-content">
+    <p>Please make sure <strong>landscape orientation</strong> is selected in your print window for best results.</p>
+    <div class="modal-buttons">
+    <button class="cancel-button" (click)="cancelPrint()">Cancel</button>
+    <button class="confirm-button" (click)="confirmPrint()">Continue to Print</button>
+  </div>
+  </div>
+</div>
+
