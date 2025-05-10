@@ -13,9 +13,16 @@
         @for (colorFormControl of colorOptionsFormArray.controls; track colorFormControl; let colorSelectionIndex = $index) {
         <tr [formGroupName]="colorSelectionIndex">
           <td>
-            <div class="print-cell print-only">
-              <p> {{ colorFormControl.value.color.name }} ({{ colorFormControl.value.color.hex_value }})</p>
+            <div
+              class="print-cell print-only"
+              [ngStyle]="{
+                'background-color': colorFormControl.value.color.hex_value,
+                'color': getTextColorForBackground(colorFormControl.value.color.hex_value)
+              }"
+            >
+              {{ colorFormControl.value.color.name }} ({{ colorFormControl.value.color.hex_value }})
             </div>
+
             <div class="color-select-row">
               <input
                 type="radio"
@@ -56,7 +63,7 @@
               </div>
             </div>
           </td>
-          <td style="width: 80%">
+          <td class="column-two-cell" style="width: 80%">
             <div class="column-two-inner">
               @let thisRowsColor = colorFormControl.get('color')?.value?.name;
               <span>
