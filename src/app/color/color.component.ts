@@ -4,9 +4,6 @@ import { ColorGeneratorComponent } from "../color-generator/color-generator.comp
 import { Database } from '../api/database';
 import { HttpParams } from '@angular/common/http';
 
-// Import Bootstrap tooltip functionality
-import * as bootstrap from 'bootstrap';
-
 @Component({
   selector: 'app-color',
   standalone: true,
@@ -42,6 +39,9 @@ export class ColorComponent implements AfterViewInit {
       colorsControl.addValidators(Validators.max(this.numberOfColorsInDatabase));
     });
   }
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   get rows() {
     return this.rowsColumnsColorsForm.get('rows');
@@ -67,16 +67,5 @@ export class ColorComponent implements AfterViewInit {
       this.numberOfColumns = Number(this.rowsColumnsColorsForm.value.columns);
       this.numberOfColors = Number(this.rowsColumnsColorsForm.value.colors);
     }
-  }
-
-  ngAfterViewInit(): void {
-    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.forEach((el) => {
-      new bootstrap.Tooltip(el, {
-        delay: { show: 0, hide: 100 },
-        trigger: 'hover',
-        placement: 'top'
-      });
-    });
   }
 }

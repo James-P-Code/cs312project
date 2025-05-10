@@ -12,11 +12,4 @@ declare module 'bootstrap' {
 	  hide(): void;
 	  toggle(): void;
   }
-
-  export class Tooltip {
-	constructor(element: Element, options?: any);
-	show(): void;
-	hide(): void;
-	toggle(): void;
-  }
 }

@@ -13,10 +13,13 @@
         @for (colorFormControl of colorOptionsFormArray.controls; track colorFormControl; let colorSelectionIndex = $index) {
         <tr [formGroupName]="colorSelectionIndex">
           <td>
+            <div class="print-cell print-only">
+              <p> {{ colorFormControl.value.color.name }} ({{ colorFormControl.value.color.hex_value }})</p>
+            </div>
             <div class="color-select-row">
               <input
                 type="radio"
-                class="radio-input no-print"
+                class="radio-input"
                 formControlName="selectedColor"
                 name="selectedColor"
                 [value]="colorFormControl.value.color"
@@ -25,7 +28,7 @@
               <div class="dropdown-wrapper">
                 <!-- Dropdown (screen only) -->
                 <select
-                  class="color-dropdown no-print"
+                  class="color-dropdown"
                   [ngStyle]="{
                     'background-color': colorFormControl.value.color.hex_value,
                     color: getTextColorForBackground(
@@ -50,11 +53,6 @@
                   </option>
                   }
                 </select>
-
-                <!-- Static hex value for print -->
-                <span class="print-only m-2">
-                  {{ colorFormControl.value.color.hex_value }}
-                </span>
               </div>
             </div>
           </td>

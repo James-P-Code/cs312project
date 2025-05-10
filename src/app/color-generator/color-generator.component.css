@@ -1,8 +1,20 @@
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    background-color: white !important;
+    background-color: white;
+  }
+
+  .print-cell {
+    width: auto;
+    height: 100%;
+    padding-left: 0.5rem;
+    font-size: 1.05rem;
+    border-radius: 0;
+    text-align: left;
+    overflow: hidden;
+    vertical-align: middle;
   }
 
   body {
@@ -29,12 +41,13 @@
     transform-origin: top left;
   }
 
-  .color-select-row,
+  /* .color-select-row, */
   .column-two-inner {
     font-size: 1.05rem;
   }
 
   .color-dropdown,
+  .dropdown-wrapper,
   .radio-input,
   .dropdown-label,
   .no-print,
@@ -76,13 +89,21 @@
     padding: 0;
   }
 
+  .table-one td.first-child {
+    padding-left: 1rem !important;
+    justify-content: left !important;
+  }
+
+  .table-one tr {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   table {
+    width: fit-content !important;
     max-width: 100% !important;
-    font-size: 6px;
-    /* border-collapse: collapse; */
-    /* table-layout: auto; */
-    /* margin-top: 75px; */
     page-break-inside: avoid;
+    overflow: visible !important;
   }
 
   td,
@@ -102,10 +123,6 @@
     background-color: #000 !important;
     color: #fff !important;
   }
-
-  /* tr {
-    page-break-inside: avoid;
-  } */
 
   ::-webkit-scrollbar {
     display: none !important;
