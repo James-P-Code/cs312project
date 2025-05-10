@@ -17,6 +17,7 @@
               <input
                 type="radio"
                 class="radio-input"
+                [style.visibility]="isPrinting ? 'hidden' : 'visible'"
                 formControlName="selectedColor"
                 name="selectedColor"
                 [value]="colorFormControl.value.color"
