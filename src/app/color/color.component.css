@@ -2,12 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-}
-
-.instruction-button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1.5rem 2rem 0 0;
+  flex-wrap: wrap;
+  padding: 0 2rem;
 }
 
 .instruction-button {
@@ -49,17 +45,39 @@ hr {
 }
 
 form p {
-    /* margin: 1rem; */
     padding: 0 2rem 0 2rem;
 }
 
-.first-form {
-    margin-top: 1.5rem;
+.form-container {
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 2rem 0 0;
 }
 
-.submit-button-container {
-    /* margin: 1rem 0 3rem 1rem; */
-    padding: 0 2rem 0 2rem;
+.form-line {
+  display: flex-start;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.form-line label {
+  min-width: 150px;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.form-line input {
+  width: 120px;
+  padding: 0.2rem;
+  padding-left: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .error-box {
@@ -68,6 +86,7 @@ form p {
   padding: 0.5rem 0.75rem;
   margin-top: 0.5rem;
   margin-left: 0;
+  margin-bottom: 0.5rem;
   border: 1px solid #ff6b6b;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -104,13 +123,6 @@ span.error-box::before {
     color: #6d4ae2;
     border-color: #6d4ae2;
   }
-
-  /* background-color: #f9f9ff;
-  color: #6d4ae2;
-  border: 1px solid #6d4ae2;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: transform 0.2s ease, color 0.2s ease; */
   
   button:hover {
     background-color: #6d4ae2;
@@ -160,6 +172,10 @@ span.error-box::before {
     box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
   }
   
+.modal {
+  padding: 1.5rem;
+}
+
 .modal-content {
   border: 2px solid #6d4ae2;
   border-radius: 1.1rem;
@@ -238,4 +254,127 @@ span.error-box::before {
 .modal-footer .btn:focus {
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 2rem 0 0rem;
+  flex-wrap: wrap;
+}
+
+.form-section {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  max-width: 450px;
+  padding: 1.5rem 0rem 0 0;
+  margin: 0 auto;
+  /* margin-bottom: 3rem; */
+}
+
+.instruction-button-icon {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  background-color: #f9f9ff;
+  color: #6d4ae2;
+  border: 1px solid #6d4ae2;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 0.8rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.instruction-button-icon:hover {
+  background-color: #6d4ae2;
+  color: white;
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.instruction-button-icon:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
+}
+
+@media print {
+  .instruction-button-icon {
+    display: none !important;
+  }
+}
+
+@media print {
+  body, html {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .instruction-button-icon,
+  .no-print,
+  input,
+  select {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-logo {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  td, th {
+    padding: 4px;
+    border: 1px solid #000;
+    word-wrap: break-word;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  /* Table One – Reference Table Styles */
+  .table-one td.color-name {
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+  }
+
+  .table-one .color-swatch {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #000;
+    margin-right: 0.25rem;
+  }
+
+  /* Table Two – Coordinate Grid */
+  .table-two td {
+    background-color: white !important;
+    color: white !important;
+  }
+
+  .table-two td::before {
+    content: "";
+  }
 }
