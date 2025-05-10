@@ -268,11 +268,11 @@ span.error-box::before {
 .form-section {
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: relative;
   max-width: 450px;
   padding: 1.5rem 0rem 0 0;
   margin: 0 auto;
-  margin-bottom: 3rem;
+  /* margin-bottom: 3rem; */
 }
 
 .instruction-button-icon {
@@ -305,6 +305,76 @@ span.error-box::before {
   box-shadow: 0 0 0 0.2rem rgba(109, 74, 226, 0.5);
 }
 
-.generator-wrapper {
-  margin-top: 15.5rem;
+@media print {
+  .instruction-button-icon {
+    display: none !important;
+  }
+}
+
+@media print {
+  body, html {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .instruction-button-icon,
+  .no-print,
+  input,
+  select {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-logo {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  td, th {
+    padding: 4px;
+    border: 1px solid #000;
+    word-wrap: break-word;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  /* Table One – Reference Table Styles */
+  .table-one td.color-name {
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+  }
+
+  .table-one .color-swatch {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #000;
+    margin-right: 0.25rem;
+  }
+
+  /* Table Two – Coordinate Grid */
+  .table-two td {
+    background-color: white !important;
+    color: white !important;
+  }
+
+  .table-two td::before {
+    content: "";
+  }
 }
